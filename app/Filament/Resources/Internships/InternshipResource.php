@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Divisions;
+namespace App\Filament\Resources\Internships;
 
-use App\Filament\Resources\Divisions\Pages\ManageDivisions;
-use App\Models\Division;
+use App\Filament\Resources\Internships\Pages\ManageInternships;
+use App\Models\Internship;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -15,30 +15,33 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
-class DivisionResource extends Resource
+class InternshipResource extends Resource
 {
-    protected static ?string $model = Division::class;
-
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
-    protected static ?string $recordTitleAttribute = 'division';
+    protected static ?string $model = Internship::class;
+    protected static ?string $pluralModelLabel = "Internship";
+    protected static ?string $modelLabel = "Internship";
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::User;
+    protected static string | UnitEnum | null $navigationGroup = 'Biodata';
+    protected static ?string $recordTitleAttribute = 'internship';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
+                TextInput::make('internship')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('division')
+            ->recordTitleAttribute('internship')
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('internship')
                     ->searchable(),
             ])
             ->filters([
@@ -58,7 +61,7 @@ class DivisionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ManageDivisions::route('/'),
+            'index' => ManageInternships::route('/'),
         ];
     }
 }

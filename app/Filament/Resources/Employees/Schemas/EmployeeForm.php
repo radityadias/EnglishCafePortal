@@ -15,34 +15,41 @@ class EmployeeForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Nama')
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email address')
-                    ->email(),
+                    ->label('Alamat Email')
+                    ->email()
+                    ->required(),
                 TextInput::make('phone')
-                    ->label('Phone number'),
+                    ->label('No. Handphone')
+                    ->required(),
                 Select::make('division_id')
-                    ->label('Division')
-                    ->relationship('division', 'name'),
-                Select::make('employment_status')
-                    ->label('Employment status')
-                    ->options([
-                        'staff' => 'Staff',
-                        'part_time' => 'Part time',
-                        'internship' => 'Internship',
-                    ]),
+                    ->label('Divisi')
+                    ->relationship('division', 'name')
+                    ->placeholder('Pilih Divisi'),
                 Select::make('gender')
-                    ->label('Gender')
+                    ->label('Jenis Kelamin')
                     ->options([
-                        'male' => 'Male',
-                        'female' => 'Female',
-                    ]),
-                TextInput::make('bank_number')
-                    ->label('Bank number'),
+                        'male' => 'Laki-laki',
+                        'female' => 'Perempuan',
+                    ])
+                    ->placeholder('Pilih Jenis Kelamin'),
                 FileUpload::make('cv_path')
                     ->label('Curriculum vitae')
                     ->disk('s3')
                     ->directory('cv')
+                    ->visibility('public'),
+                FileUpload::make('ktp_path')
+                    ->label('KTP')
+                    ->disk('s3')
+                    ->directory('ktp')
+                    ->visibility('public'),
+                FileUpload::make('other_path')
+                    ->label('Sertifikat Lainnya')
+                    ->disk('s3')
+                    ->multiple()
+                    ->directory('other')
                     ->visibility('public'),
             ]);
     }

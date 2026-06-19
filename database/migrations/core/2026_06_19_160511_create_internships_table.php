@@ -11,23 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('internships', function (Blueprint $table) {
             $table->id();
             $table->string('name', 128);
             $table->string('email')->unique()->nullable();
             $table->string('phone')->unique()->nullable();
             $table->string('address')->nullable();
             $table->string('gender')->nullable();
-            $table->string('bank_number')->nullable();
-            $table->unsignedBigInteger('division_id')->nullable();
-            $table->string('employment_status')->nullable();
             $table->string('total_hours')->nullable();
-            $table->string('salary')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
             $table->string('cv_path')->nullable();
-
-            $table->foreign('division_id')->references('id')->on('divisions');
+            $table->string('other_path')->nullable();
         });
     }
 
@@ -36,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('internships');
     }
 };

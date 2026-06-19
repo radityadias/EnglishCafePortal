@@ -14,27 +14,26 @@ class Employee extends Model
     protected $fillable = [
         'name',
         'email',
+        'password',
         'phone',
         'address',
         'gender',
-        'bank_number',
         'division_id',
-        'employment_status',
+        'branch_id',
+        'working_time_id',
         'total_hours',
         'cv_path',
-        'start_date',
-        'end_date',
+        'ktp_path',
+        'other_path',
     ];
-
-//    public function casts() : array
-//    {
-//        return [
-//            'cv_path' => 'array'
-//        ];
-//    }
 
     public function division() : BelongsTo
     {
         return $this->belongsTo(Division::class, 'division_id');
+    }
+
+    public function branch() : BelongsTo
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }

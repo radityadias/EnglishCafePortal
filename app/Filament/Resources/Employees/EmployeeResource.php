@@ -13,12 +13,18 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use UnitEnum;
 
 class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
+    protected static ?string $pluralModelLabel = "Karyawan";
+    protected static ?string $modelLabel = "Karyawan";
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string | UnitEnum | null $navigationGroup = 'Biodata';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Briefcase;
 
     protected static ?string $recordTitleAttribute = 'employee';
 
@@ -46,5 +52,10 @@ class EmployeeResource extends Resource
             'create' => CreateEmployee::route('/create'),
             'edit' => EditEmployee::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Karyawan');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Employees\Pages;
 use App\Filament\Resources\Employees\EmployeeResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Contracts\Support\Htmlable;
 
 class ListEmployees extends ListRecords
 {
@@ -13,7 +14,8 @@ class ListEmployees extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Tambah Karyawan'),
         ];
     }
 }
