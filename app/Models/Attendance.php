@@ -3,19 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Attendance extends Model
 {
     protected $table = 'attendances';
-    protected $primaryKey = 'id';
-    public $timestamps = false;
     protected $fillable = [
-        'arrival_date',
-        'time_in',
-        'time_out',
+        'user_id',
         'status',
-        'employee_id',
-        'internship_id',
-        'leave_type_id',
+        'arrival_date',
+        'checkin_date',
+        'checkin_time',
+        'checkout_time',
     ];
+
+    public function user() : BelongsTo {
+        return $this->belongsTo(User::class);
+    }
 }

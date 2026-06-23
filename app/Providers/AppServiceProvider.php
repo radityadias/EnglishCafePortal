@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

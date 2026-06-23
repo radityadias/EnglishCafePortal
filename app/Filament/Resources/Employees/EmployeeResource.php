@@ -5,32 +5,42 @@ namespace App\Filament\Resources\Employees;
 use App\Filament\Resources\Employees\Pages\CreateEmployee;
 use App\Filament\Resources\Employees\Pages\EditEmployee;
 use App\Filament\Resources\Employees\Pages\ListEmployees;
+use App\Filament\Resources\Employees\Pages\ViewEmployee;
 use App\Filament\Resources\Employees\Schemas\EmployeeForm;
+use App\Filament\Resources\Employees\Schemas\EmployeeInfolist;
 use App\Filament\Resources\Employees\Tables\EmployeesTable;
-use App\Models\Employee;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Support\Htmlable;
 use UnitEnum;
 
 class EmployeeResource extends Resource
 {
-    protected static ?string $model = Employee::class;
-    protected static ?string $pluralModelLabel = "Karyawan";
-    protected static ?string $modelLabel = "Karyawan";
+    protected static ?string $model = User::class;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::UserGroup;
 
     protected static string | UnitEnum | null $navigationGroup = 'Biodata';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::Briefcase;
+    protected static ?string $pluralModelLabel = 'Karyawan';
 
     protected static ?string $recordTitleAttribute = 'employee';
+
+    public static function getModelLabel() : string {
+        return 'karyawan';
+    }
 
     public static function form(Schema $schema): Schema
     {
         return EmployeeForm::configure($schema);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return EmployeeInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -50,12 +60,8 @@ class EmployeeResource extends Resource
         return [
             'index' => ListEmployees::route('/'),
             'create' => CreateEmployee::route('/create'),
+            'view' => ViewEmployee::route('/{record}'),
             'edit' => EditEmployee::route('/{record}/edit'),
         ];
-    }
-
-    public static function getNavigationLabel(): string
-    {
-        return __('Karyawan');
     }
 }

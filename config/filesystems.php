@@ -59,18 +59,6 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
-        'supabase' => [
-            'driver' => 'supabase',
-            'key' => env('SUPABASE_KEY'),
-            'secret' => env('SUPABASE_SECRET'),
-            'region' => env('SUPABASE_REGION'),
-            'bucket' => env('SUPABASE_BUCKET'),
-            'endpoint' => env('SUPABASE_ENDPOINT'),
-            'url' => null,
-            'defaultUrlGeneration' => null,
-        ]
-
     ],
 
     /*

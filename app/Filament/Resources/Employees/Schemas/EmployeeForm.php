@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Employees\Schemas;
 
-use App\Models\Division;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
+use App\Models\User;
 
 class EmployeeForm
 {
@@ -14,43 +16,64 @@ class EmployeeForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->label('Nama')
-                    ->required(),
-                TextInput::make('email')
-                    ->label('Alamat Email')
-                    ->email()
-                    ->required(),
-                TextInput::make('phone')
-                    ->label('No. Handphone')
-                    ->required(),
-                Select::make('division_id')
-                    ->label('Divisi')
-                    ->relationship('division', 'name')
-                    ->placeholder('Pilih Divisi'),
-                Select::make('gender')
-                    ->label('Jenis Kelamin')
-                    ->options([
-                        'male' => 'Laki-laki',
-                        'female' => 'Perempuan',
-                    ])
-                    ->placeholder('Pilih Jenis Kelamin'),
-                FileUpload::make('cv_path')
-                    ->label('Curriculum vitae')
-                    ->disk('s3')
-                    ->directory('cv')
-                    ->visibility('public'),
-                FileUpload::make('ktp_path')
-                    ->label('KTP')
-                    ->disk('s3')
-                    ->directory('ktp')
-                    ->visibility('public'),
-                FileUpload::make('other_path')
-                    ->label('Sertifikat Lainnya')
-                    ->disk('s3')
-                    ->multiple()
-                    ->directory('other')
-                    ->visibility('public'),
-            ]);
+                Group::make()
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nama Lengkap'),
+                        TextInput::make('email')
+                            ->label('Email'),
+                    ]),
+
+                Group::make()
+                    ->columns(2)
+                    ->relationship('employeeProfile')
+                    ->schema([
+                        TextInput::make('nickname')
+                            ->label('Nama Panggilan'),
+                        TextInput::make('phone')
+                            ->label('No. Telp'),
+                        TextInput::make('phone_backup')
+                            ->label('No. Telp Backup'),
+                        TextInput::make('birth_place')
+                            ->label('Tempat Lahir'),
+                        DatePicker::make('birth_date')
+                            ->label('Tanggal Lahir'),
+                        TextInput::make('address')
+                            ->label('Alamat'),
+                        Select::make('bank_name')
+                            ->label('Nama Bank')
+                            ->options([
+                                'BCA' => 'BCA',
+                                'BNI' => 'BNI',
+                                'BRI' => 'BRI',
+                                'Mandiri' => 'Mandiri',
+                                'Seabank' => 'Seabank',
+                                'BPD' => 'BPD',
+                                'BSI' => 'BSI',
+                                'Jago' => 'Jago'
+                            ])
+                            ->searchable(),
+                        TextInput::make('bank_number')
+                            ->label('No. Rekening'),
+                        TextInput::make('bank_account_name')
+                            ->label('Nama Pemilik Rekening'),
+                        FileUpload::make('cv_path')
+                            ->label('CV')
+                            ->disk('s3')
+                            ->directory('cv')
+                            ->preventFilePathTampering(
+                                allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'cv/')
+                            ),
+                        FileUpload::make('ktp_path')
+                            ->label('KTP')
+                            ->disk('s3')
+                            ->directory('ktp')
+                            ->preventFilePathTampering(
+                                allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'ktp/')
+                            )
+                    ]),
+            ])
+            ->columns(1);
     }
 }

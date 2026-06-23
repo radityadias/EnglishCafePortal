@@ -8,13 +8,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Division extends Model
 {
     protected $table = 'divisions';
-    protected $primaryKey = 'id';
     protected $fillable = [
         'name',
     ];
     public $timestamps = false;
-    public function Employees() : HasMany
+
+    public function internshipsProfiles() : HasMany
     {
-        return $this->hasMany(Employee::class);
+        return $this->hasMany(InternshipProfile::class);
     }
+
+    public function employeesProfiles() : HasMany
+    {
+        return $this->hasMany(EmployeeProfile::class);
+    }
+
 }

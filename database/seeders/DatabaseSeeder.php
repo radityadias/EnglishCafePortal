@@ -5,10 +5,11 @@ namespace database\seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\BranchesSeeder;
-use Database\Seeders\DivisionsSeeder;
-use Database\Seeders\LeaveTypesSeeder;
-use Database\Seeders\WorkingTimesSeeder;
+use Database\Seeders\BranchSeeder;
+use Database\Seeders\DivisionSeeder;
+use Database\Seeders\LeaveTypeSeeder;
+use Database\Seeders\WorkingTimeSeeder;
+use Database\Seeders\UserSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,19 +20,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'raditya',
-            'email' => 'raditya@gmail.com',
-            'password' => bcrypt('radityadias'),
-        ]);
-
         $this->call([
-            BranchesSeeder::class,
-            DivisionsSeeder::class,
-            LeaveTypesSeeder::class,
-            WorkingTimesSeeder::class,
+            BranchSeeder::class,
+            DivisionSeeder::class,
+            LeaveTypeSeeder::class,
+            WorkingTimeSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

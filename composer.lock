@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00ef24c3995cb2ef95f4c20a04e6d412",
+    "content-hash": "d5b4b78d3299e9cb5a2a8b02e8c92899",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -5388,6 +5388,65 @@
                 "source": "https://github.com/ramsey/uuid/tree/4.9.3"
             },
             "time": "2026-06-18T03:57:49+00:00"
+        },
+        {
+            "name": "robertboes/blade-selfhst-icons",
+            "version": "v0.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RobertBoes/blade-selfhst-icons.git",
+                "reference": "aab97c97a26a492e3282ef652664dfaede2a951c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RobertBoes/blade-selfhst-icons/zipball/aab97c97a26a492e3282ef652664dfaede2a951c",
+                "reference": "aab97c97a26a492e3282ef652664dfaede2a951c",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.6",
+                "illuminate/support": "^11.0 || ^12.0 || ^13.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
+                "phpunit/phpunit": "^10.5 || ^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BladeUI\\SelfhstIcons\\BladeSelfhstIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BladeUI\\SelfhstIcons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Boes"
+                }
+            ],
+            "description": "A package to easily make use of selfh.st Icons in your Laravel Blade views.",
+            "homepage": "https://github.com/RobertBoes/blade-selfhst-icons",
+            "keywords": [
+                "blade",
+                "icons",
+                "laravel",
+                "selfh.st"
+            ],
+            "support": {
+                "issues": "https://github.com/RobertBoes/blade-selfhst-icons/issues",
+                "source": "https://github.com/RobertBoes/blade-selfhst-icons/tree/v0.3.3"
+            },
+            "time": "2026-06-15T11:12:53+00:00"
         },
         {
             "name": "ryangjchandler/blade-capture-directive",

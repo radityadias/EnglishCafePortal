@@ -15,8 +15,19 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('password')->nullable();
+            $table->enum('position',
+                [
+                    'Onboarding',
+                    'Training',
+                    'Internship',
+                    'Karyawan',
+                    'Nonaktif',
+                    'Admin',
+                    'Super Admin'
+                ])
+                ->default('Nonaktif');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });

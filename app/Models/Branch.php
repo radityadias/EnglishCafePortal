@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Branch extends Model
 {
     protected $table = 'branches';
-    protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
         'name',
     ];
 
-    public function hasMany() : HasMany
+    public function internships(): HasMany
     {
-        return $this->hasMany(Employee::class);
+        return $this->hasMany(InternshipProfile::class);
     }
+
 }
