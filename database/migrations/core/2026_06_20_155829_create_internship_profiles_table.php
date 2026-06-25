@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('internship_profiles', function (Blueprint $table) {
             $table->id();
             $table->string('nickname')->nullable();
-            $table->string('phone')->nullable();
             $table->string('birth_place')->nullable();
             $table->date('birth_date')->nullable();
             $table->text('address')->nullable();

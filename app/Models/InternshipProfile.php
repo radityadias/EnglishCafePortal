@@ -10,7 +10,6 @@ class InternshipProfile extends Model
     protected $table = 'internship_profiles';
     protected $fillable = [
         'nickname',
-        'phone',
         'birth_date',
         'birth_place',
         'address',

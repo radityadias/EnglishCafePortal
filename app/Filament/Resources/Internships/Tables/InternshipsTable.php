@@ -23,7 +23,7 @@ class InternshipsTable
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
-                TextColumn::make('intershipProfile.phone')
+                TextColumn::make('phone')
                     ->label('No. Telp')
                     ->searchable(),
             ])

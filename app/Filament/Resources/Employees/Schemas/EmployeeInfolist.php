@@ -2,12 +2,8 @@
 
 namespace App\Filament\Resources\Employees\Schemas;
 
-use App\Models\User;
-use Filament\Forms\Components\FileUpload;
-use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Group;
-use Filament\Schemas\Components\Image;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,6 +23,8 @@ class EmployeeInfolist
                             ->label('Email'),
                         TextEntry::make('position')
                             ->label('Posisi'),
+                        TextEntry::make('phone')
+                            ->label('No. HP'),
                     ]),
 
                 Group::make()
@@ -37,8 +35,6 @@ class EmployeeInfolist
                     ])
                     ->relationship('employeeProfile')
                     ->schema([
-                        TextEntry::make('phone')
-                            ->label('No. HP'),
                         TextEntry::make('address')
                             ->label('Alamat'),
                         TextEntry::make('birth_place')
