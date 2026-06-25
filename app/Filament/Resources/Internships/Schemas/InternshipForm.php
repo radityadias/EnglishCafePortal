@@ -22,6 +22,8 @@ class InternshipForm
                             ->label('Nama Lengkap'),
                         TextInput::make('email')
                             ->label('Email'),
+                        TextInput::make('phone')
+                            ->label('No. Telp'),
                     ]),
 
                 Group::make()
@@ -30,8 +32,6 @@ class InternshipForm
                     ->schema([
                         TextInput::make('nickname')
                             ->label('Nama Panggilan'),
-                        TextInput::make('phone')
-                            ->label('No. Telp'),
                         TextInput::make('phone_backup')
                             ->label('No. Telp Backup'),
                         TextInput::make('birth_place')

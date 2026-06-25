@@ -10,7 +10,6 @@ class EmployeeProfile extends Model
     protected $table = 'employee_profiles';
     protected $fillable = [
         'nickname',
-        'phone',
         'phone_backup',
         'birth_date',
         'birth_place',

@@ -1,33 +1,35 @@
 <?php
 
-namespace App\Filament\Resources\Users;
+namespace App\Filament\Resources\Onboardings;
 
-use App\Filament\Resources\Users\Pages\ManageUsers;
+use App\Filament\Resources\Onboardings\Pages\ManageOnboardings;
 use App\Models\User;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use UnitEnum;
 
-class UserResource extends Resource
+class OnboardingResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::User;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string | UnitEnum | null $navigationGroup = 'Keamanan';
+    protected static string|UnitEnum|null $navigationGroup = 'Rekrutmen';
 
-    protected static ?string $recordTitleAttribute = 'user';
+    protected static ?string $pluralModelLabel = 'Onboarding';
+
+    protected static ?string $recordTitleAttribute = 'onboarding';
 
     public static function form(Schema $schema): Schema
     {
@@ -35,41 +37,35 @@ class UserResource extends Resource
             ->components([
                 TextInput::make('name')
                     ->label('Nama')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 TextInput::make('email')
-                    ->label('Alamat Email')
-                    ->email()
+                    ->label('Email')
                     ->required(),
                 TextInput::make('phone')
-                    ->label('No. Telp'),
-                Select::make('position')
+                    ->label('No. Telp')
+                    ->required(),
+                TextInput::make('position')
                     ->label('Posisi')
-                    ->required()
-                    ->options([
-                        'Onboarding',
-                        'Training',
-                        'Internship',
-                        'Karyawan',
-                        'Nonaktif',
-                        'Admin',
-                    ])
-                    ->default('Nonaktif'),
+                    ->default('Onboarding')
+                    ->disabled(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('user')
+            ->recordTitleAttribute('onboarding')
+            ->modifyQueryUsing(fn(Builder $query) => $query->where('position', 'Onboarding'))
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Alamat Email')
+                    ->label('Email')
                     ->searchable(),
-                TextColumn::make('position')
-                    ->label('Posisi')
+                TextColumn::make('phone')
+                    ->label('No. Telp')
                     ->searchable(),
             ])
             ->filters([
@@ -77,8 +73,7 @@ class UserResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make()
-                    ->label('Hapus'),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -90,7 +85,7 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ManageUsers::route('/'),
+            'index' => ManageOnboardings::route('/'),
         ];
     }
 }
