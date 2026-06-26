@@ -13,7 +13,8 @@ class ManageOnboardings extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+            ->label('Onboarding Baru'),
         ];
     }
 }
