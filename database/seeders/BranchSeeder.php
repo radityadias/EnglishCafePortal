@@ -16,31 +16,44 @@ class BranchSeeder extends Seeder
     {
         DB::table('branches')->insert([
             [
-                'name' => 'Kantor English Cafe Kotagede'
+                'name' => 'Kantor English Cafe Kotagede',
+                'latitude' => -7.8161472,
+                'longitude' => 110.3935871
             ],
             [
-                'name' => 'English Cafe UNS'
+                'name' => 'English Cafe UNS',
+                'latitude' => null,
+                'longitude' => null
             ],
             [
-                'name' => 'English Cafe USM'
+                'name' => 'English Cafe USM',
+                'latitude' => null,
+                'longitude' => null
             ],
             [
-                'name' => 'English Cafe UNDIP'
+                'name' => 'English Cafe UNDIP',
+                'latitude' => null,
+                'longitude' => null
             ],
             [
-                'name' => 'English Cafe UMY'
+                'name' => 'English Cafe UMY',
+                'latitude' => null,
+                'longitude' => null
             ],
             [
-                'name' => 'English Cafe Alive Fusion Dining'
+                'name' => 'English Cafe Alive Fusion Dining',
+                'latitude' => null,
+                'longitude' => null
             ],
             [
-                'name' => 'English Cafe Depok UI'
+                'name' => 'English Cafe Depok UI',
+                'latitude' => null,
+                'longitude' => null
             ],
             [
-                'name' => 'English Cafe UB'
-            ],
-            [
-                'name' => 'Hybrid'
+                'name' => 'English Cafe UB',
+                'latitude' => null,
+                'longitude' => null
             ]
         ]);
     }

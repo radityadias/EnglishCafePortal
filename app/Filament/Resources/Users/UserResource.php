@@ -46,14 +46,19 @@ class UserResource extends Resource
                     ->label('Posisi')
                     ->required()
                     ->options([
-                        'Onboarding',
-                        'Training',
-                        'Internship',
-                        'Karyawan',
-                        'Nonaktif',
-                        'Admin',
+                        'Onboarding' => 'Onboarding',
+                        'Training' => 'Training',
+                        'Internship' => 'Internship',
+                        'Karyawan' => 'Karyawan',
+                        'Nonaktif' => 'Nonaktif',
+                        'Admin' => 'Admin',
+                        'Super Admin' => 'Super Admin',
                     ])
                     ->default('Nonaktif'),
+                Select::make('roles')
+                    ->label('Role')
+                    ->relationship('roles', 'name')
+                    ->preload()
             ]);
     }
 

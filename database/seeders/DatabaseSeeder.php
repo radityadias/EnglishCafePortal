@@ -11,6 +11,7 @@ use Database\Seeders\LeaveTypeSeeder;
 use Database\Seeders\WorkingTimeSeeder;
 use Database\Seeders\UserSeeder;
 
+
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;

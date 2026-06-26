@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class InternshipProfile extends Model
+class
+InternshipProfile extends Model
 {
     protected $table = 'internship_profiles';
     protected $fillable = [

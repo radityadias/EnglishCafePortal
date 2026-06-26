@@ -9,13 +9,15 @@ class Branch extends Model
 {
     protected $table = 'branches';
     public $timestamps = false;
+
     protected $fillable = [
         'name',
+        'latitude',
+        'longitude',
     ];
 
     public function internships(): HasMany
     {
         return $this->hasMany(InternshipProfile::class);
     }
-
 }
