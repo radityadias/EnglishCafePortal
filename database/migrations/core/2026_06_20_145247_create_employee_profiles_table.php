@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('cv_path')->nullable();
             $table->string('ktp_path')->nullable();
             $table->string('other_path')->nullable();
+            $table->time('work_time_start')->nullable()->default(null);
+            $table->time('work_time_end')->nullable()->default(null);
             $table->timestamps();
         });
     }

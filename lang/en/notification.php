@@ -1,22 +1,18 @@
 <?php
 
 return [
-    'attendance' => [
-        'success' => [
-            'title' => 'Attendance success!',
-            'description' => 'Attendance for :name at :checkin_time was successful!'
-        ],
-        'expired' => [
-            'title' => 'Attendance expired!',
-            'description' => 'Attendance expired, plase login again!'
-        ],
-        'error' => [
-            'title' => 'Attendance error!',
-            'description' => 'Attendance error, please try again later!'
-        ],
-        'invalid' => [
-            'title' => 'Attendance invalid!',
-            'description' => 'Attendance invalid, you have been detected outside the branch. Please get closer!'
-        ]
-    ]
+    'success_title' => 'Attendance Successful',
+    'success_description' => 'Welcome :name, your attendance has been checked in at :checkin_time.',
+
+    'error_title' => 'Something went wrong',
+    'error_description' => 'Something went wrong, please try again later and contact the administrator.',
+
+    'expired_title' => 'Attendance Expired',
+    'expired_description' => 'Your attendance has been expired. Please login again.',
+
+    'invalid_title' => 'Attendance Invalid',
+    'invalid_description' => 'You have been detected outside of the branch. Please get closer.',
+
+    'existed_title' => 'Attendance Already Existed',
+    'existed_description' => 'You already have an attendance at this time.',
 ];

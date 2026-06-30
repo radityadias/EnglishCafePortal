@@ -8,7 +8,6 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\BranchSeeder;
 use Database\Seeders\DivisionSeeder;
 use Database\Seeders\LeaveTypeSeeder;
-use Database\Seeders\WorkingTimeSeeder;
 use Database\Seeders\UserSeeder;
 
 
@@ -25,7 +24,6 @@ class DatabaseSeeder extends Seeder
             BranchSeeder::class,
             DivisionSeeder::class,
             LeaveTypeSeeder::class,
-            WorkingTimeSeeder::class,
             UserSeeder::class,
         ]);
     }
