@@ -19,14 +19,16 @@ class AttendanceScanner extends Widget
     protected int | string | array $columnSpan = 'full';
 
     private const float ALLOWED_RADIUS = 50.0;
-    private const LATITUDE = -7.8161472;
-    private const LONGITUDE = 110.3935871;
+    private const float LATITUDE = -7.8161472;
+    private const float LONGITUDE = 110.3935871;
 
     public bool $alreadyCheckedIn = false;
+    public bool $alreadyCheckedOut = false;
 
     public function mount(): void
     {
         $this->alreadyCheckedIn = $this->isAlreadyCheckedIn();
+        $this->alreadyCheckedOut = $this->isAlreadyCheckedOut();
     }
 
     public function processAttendance(float $latitude, float $longitude): void
@@ -34,34 +36,56 @@ class AttendanceScanner extends Widget
         $user = $this->getAuthUser();
 
         if (!$user) {
-            $this->sendNotification('error', __('attendance.error.title'), __('attendance.error.description'));
+            $this->sendNotification('error', __('notification.error_title'), __('notification.error_description'));
             return;
         }
 
-        if ($this->alreadyCheckedIn) {
-            $this->sendNotification('info', __('attendance.already.title'), __('attendance.already.description'));
-            return;
-        }
-
-//        $branch = $user->employeeProfile?->branch;
-//
-//        if ($this->isBranchNotConfigured($branch)) {
-//            $this->sendNotification('error', __('attendance.error.title'), __('attendance.error.description'));
-//            return;
-//        }
-
-        $geofence = $this->instantiateGeofenceService();
-        $distance = $geofence->calculateDistance($latitude, $longitude, self::LATITUDE, self::LONGITUDE);
+        $distance = $this->instantiateGeofenceService()
+            ->calculateDistance($latitude, $longitude, self::LATITUDE, self::LONGITUDE);
 
         if ($distance > self::ALLOWED_RADIUS) {
-            $this->sendNotification('danger', __('attendance.invalid.title'), __('attendance.invalid.description'));
+            $this->sendNotification('danger', __('notification.invalid_title'), __('notification.invalid_description'));
             return;
         }
 
-        $this->storeAttendance($user);
+        // Check Out
+        if ($this->alreadyCheckedIn && !$this->alreadyCheckedOut) {
+            $this->processCheckOut($user);
+        }
+
+        // Check In
+        if (!$this->alreadyCheckedIn) {
+            $this->processCheckin($user);
+        }
+
+        $this->sendNotification('success', __('notification.success_title'), __('notification.success_description'));
+    }
+
+    private function processCheckin(User $user): void
+    {
+        $attendance = $this->storeAttendance($user);
+
         $this->alreadyCheckedIn = true;
 
-        $this->sendNotification('success', __('attendance.success.title'), __('attendance.success.description'));
+        if ($attendance->wasRecentlyCreated) {
+            $this->sendNotification('success', __('notification.success_title'), __('notification.success_description'));
+        } else {
+            $this->sendNotification('info', __('notification.existed_title'), __('notification.existed_description'));
+        }
+
+    }
+
+    private function processCheckOut(User $user): void
+    {
+        $updated = $this->updateAttendance($user);
+
+        $this->alreadyCheckedOut = true;
+
+        if ($updated) {
+            $this->sendNotification('success', __('notification.success_title'), __('notification.success_description'));
+        } else {
+            $this->sendNotification('info', __('notification.existed_title', ['name' => $user->name, 'time' => Carbon::now()]), __('notification.existed_description'));
+        }
     }
 
     private function getAuthUser(): ?User
@@ -81,6 +105,14 @@ class AttendanceScanner extends Widget
             ->exists();
     }
 
+    private function isAlreadyCheckedOut(): bool
+    {
+        return Attendance::where('user_id', Auth::id())
+            ->whereDate('checkin_date', today())
+            ->whereNotNull('checkout_time')
+            ->exists();
+    }
+
     private function sendNotification(string $type, string $title, string $description): void
     {
         Notification::make()
@@ -95,11 +127,11 @@ class AttendanceScanner extends Widget
         return app(GeofenceService::class);
     }
 
-    private function storeAttendance($user): void
+    private function storeAttendance($user): Attendance
     {
         // firstOrCreate guards against a duplicate insert if two requests
         // race past the alreadyCheckedIn check at nearly the same time.
-        Attendance::firstOrCreate(
+        return Attendance::firstOrCreate(
             [
                 'user_id' => $user->id,
                 'checkin_date' => today(),
@@ -108,5 +140,15 @@ class AttendanceScanner extends Widget
                 'checkin_time' => Carbon::now(),
             ]
         );
+    }
+
+    private function updateAttendance($user): bool
+    {
+        $updated = Attendance::where('user_id', $user->id)
+            ->whereDate('checkin_date', today())
+            ->whereNull('checkout_time')
+            ->update(['checkout_time' => Carbon::now()]);
+
+        return $updated > 0;
     }
 }

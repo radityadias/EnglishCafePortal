@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\Employees\Schemas;
 
+use App\Models\Branch;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
 use App\Models\User;
@@ -41,6 +43,10 @@ class EmployeeForm
                             ->label('Tanggal Lahir'),
                         TextInput::make('address')
                             ->label('Alamat'),
+                        TimePicker::make('work_time_start')
+                            ->label('Waktu Mulai Kerja'),
+                        TimePicker::make('work_time_end')
+                            ->label('Waktu Selesai Kerja'),
                         Select::make('bank_name')
                             ->label('Nama Bank')
                             ->options([

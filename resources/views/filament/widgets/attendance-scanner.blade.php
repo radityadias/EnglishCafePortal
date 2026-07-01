@@ -51,21 +51,31 @@
             </div>
 
             <div class="w-full md:w-auto">
-                @if($alreadyCheckedIn)
-                    <div class="inline-flex items-center gap-2 px-6 py-3 font-semibold text-green-600 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200">
-                        <x-heroicon-m-check-circle class="w-5 h-5" />
-                        <span>Anda Sudah Absen Hari Ini</span>
-                    </div>
-                @else
+                @if(!$alreadyCheckedIn && !$alreadyCheckedOut)
                     <button
                         type="button"
                         x-on:click="initiateGeolookup"
                         x-bind:disabled="sending"
-                        class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-amber-500 hover:bg-amber-600 transition-all rounded-xl shadow-md focus:ring-4 focus:ring-amber-500/20 disabled:opacity-60"
+                        class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-green-500 hover:bg-green-600 transition-all rounded-xl shadow-md focus:ring-4 focus:ring-green-500/20 disabled:opacity-60"
                     >
                         <x-heroicon-m-finger-print class="w-5 h-5" />
                         <span x-text="sending ? 'Mengunci Sinyal Satelit...' : 'Kirim Kehadiran (GPS)'"></span>
                     </button>
+                @elseif($alreadyCheckedIn && !$alreadyCheckedOut)
+                    <button
+                        type="button"
+                        x-on:click="initiateGeolookup"
+                        x-bind:disabled="sending"
+                        class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-red-500 hover:bg-red-600 transition-all rounded-xl shadow-md focus:ring-4 focus:ring-red-500/20 disabled:opacity-60"
+                    >
+                        <x-heroicon-m-finger-print class="w-5 h-5" />
+                        <span x-text="sending ? 'Mengunci Sinyal Satelit...' : 'Kirim Kehadiran (GPS)'"></span>
+                    </button>
+                @else
+                    <div class="inline-flex items-center gap-2 px-6 py-3 font-semibold text-green-600 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200">
+                        <x-heroicon-m-check-circle class="w-5 h-5" />
+                        <span>Anda Sudah Absen Hari Ini</span>
+                    </div>
                 @endif
             </div>
         </div>
