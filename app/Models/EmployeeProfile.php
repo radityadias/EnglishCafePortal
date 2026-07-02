@@ -22,7 +22,7 @@ class EmployeeProfile extends Model
         'other_path',
         'user_id',
         'division_id',
-        'working_time_id',
+        'branch_id',
     ];
 
     public function user() : BelongsTo

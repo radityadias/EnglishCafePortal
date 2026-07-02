@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,12 +15,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'position'])]
+#[Fillable(['name', 'email', 'password', 'password_set_at','position'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, CanResetPassword;
 
     /**
      * Get the attributes that should be cast.
@@ -57,5 +58,10 @@ class User extends Authenticatable
     public function attendanceRecap() : BelongsTo
     {
         return $this->belongsTo(AttendanceRecap::class);
+    }
+
+    public function hasSetPassword() : bool
+    {
+        return !is_null($this->password_set_at);
     }
 }

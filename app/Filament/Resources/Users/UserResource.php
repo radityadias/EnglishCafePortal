@@ -8,6 +8,7 @@ use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
+use ResendSetupLinkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -82,6 +83,7 @@ class UserResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
+                ResendSetupLinkAction::make(),
                 DeleteAction::make()
                     ->label('Hapus'),
             ])

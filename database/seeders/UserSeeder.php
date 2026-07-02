@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
             'name' => 'English Cafe Admin',
             'email' => 'admin.englishcafe@gmail.com',
             'password' => bcrypt('englishcafealwaysdifferent'),
+            'password_set_at' => now(),
             'position' => 'Super Admin',
         ]);
     }
