@@ -13,10 +13,12 @@ return new class extends Migration
     {
         schema::table('employee_profiles', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('branch_id')->nullable();
             $table->unsignedBigInteger('division_id')->nullable();
 
-            $table->foreign('division_id')->references('id')->on('divisions');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('branch_id')->references('id')->on('branches');
+            $table->foreign('division_id')->references('id')->on('divisions');
         });
     }
 

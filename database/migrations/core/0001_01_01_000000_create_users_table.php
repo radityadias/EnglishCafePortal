@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password')->nullable();
+            $table->timestamp('password_set_at')->nullable()->after('password');
             $table->string('phone')->nullable();
             $table->enum('position',
                 [
