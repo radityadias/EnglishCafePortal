@@ -4,14 +4,25 @@ namespace App\Filament\Widgets;
 
 use App\Models\Attendance;
 use App\Models\User;
+use App\Models\LeaveRequest;
 use App\Services\GeofenceService;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Forms\Concerns\InteractsWithForms;
 
-class AttendanceScanner extends Widget
+class AttendanceScanner extends Widget implements HasForms, HasActions
 {
+    use InteractsWithActions, InteractsWithForms;
+
     protected string $view = 'filament.widgets.attendance-scanner';
 
     protected static ?int $sort = 2;
@@ -30,7 +41,54 @@ class AttendanceScanner extends Widget
         $this->alreadyCheckedIn = $this->isAlreadyCheckedIn();
         $this->alreadyCheckedOut = $this->isAlreadyCheckedOut();
     }
+public function leaveRequestAction(): Action
+    {
+        return Action::make('leaveRequest')
+            ->label('Ajukan Izin')
+            ->icon('heroicon-o-document-text')
+            ->color('warning')
+            ->modalHeading('Ajukan Izin / Cuti')
+            ->modalDescription('Isi form berikut untuk mengajukan izin atau cuti.')
+            ->modalWidth('lg')
+            ->schema([
+                Select::make('type')
+                    ->label('Jenis')
+                    ->options([
+                        'sick'      => 'Sakit',
+                        'leave'     => 'Cuti',
+                        'personal'  => 'Keperluan Pribadi',
+                        'other'     => 'Lainnya',
+                    ])
+                    ->required(),
 
+                DatePicker::make('start_date')
+                    ->label('Tanggal Mulai')
+                    ->required()
+                    ->minDate(today()),
+
+                DatePicker::make('end_date')
+                    ->label('Tanggal Selesai')
+                    ->required()
+                    ->minDate(today())
+                    ->afterOrEqual('start_date'),
+
+                Textarea::make('reason')
+                    ->label('Alasan')
+                    ->required()
+                    ->rows(3)
+                    ->maxLength(500),
+            ])
+            ->action(function (array $data): void {
+                LeaveRequest::create([
+                    'user_id'    => Auth::id(),
+                    'type'       => $data['type'],
+                    'start_date' => $data['start_date'],
+                    'end_date'   => $data['end_date'],
+                    'reason'     => $data['reason'],
+                    'status'     => 'pending',
+                ]);
+            });
+    }
     public function processAttendance(float $latitude, float $longitude): void
     {
         $user = $this->getAuthUser();
@@ -51,14 +109,15 @@ class AttendanceScanner extends Widget
         // Check Out
         if ($this->alreadyCheckedIn && !$this->alreadyCheckedOut) {
             $this->processCheckOut($user);
+            return;
         }
 
         // Check In
         if (!$this->alreadyCheckedIn) {
             $this->processCheckin($user);
+            return;
         }
 
-        $this->sendNotification('success', __('notification.success_title'), __('notification.success_description'));
     }
 
     private function processCheckin(User $user): void

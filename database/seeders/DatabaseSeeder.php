@@ -7,7 +7,6 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Database\Seeders\BranchSeeder;
 use Database\Seeders\DivisionSeeder;
-use Database\Seeders\LeaveTypeSeeder;
 use Database\Seeders\UserSeeder;
 
 
@@ -23,7 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BranchSeeder::class,
             DivisionSeeder::class,
-            LeaveTypeSeeder::class,
             UserSeeder::class,
         ]);
     }

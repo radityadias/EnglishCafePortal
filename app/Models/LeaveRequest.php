@@ -10,6 +10,8 @@ class LeaveRequest extends Model
     protected $table = 'leave_requests';
     protected $fillable = [
         'user_id',
+        'type',
+        'reason',
         'leave_type_id',
         'start_date',
         'end_date',
@@ -17,6 +19,13 @@ class LeaveRequest extends Model
         'image',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'start_date' => 'date',
+            'end_date' => 'date',
+        ];
+    }
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
