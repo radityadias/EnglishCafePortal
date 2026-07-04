@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\AttendanceStatus;
+use App\Enums\AttendanceStatus;
 use Filament\Actions\BulkActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;

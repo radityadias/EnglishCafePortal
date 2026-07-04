@@ -2,23 +2,23 @@
 
 namespace App\Filament\Widgets;
 
-use App\AttendanceStatus;
+use App\Enums\AttendanceStatus;
 use App\Models\Attendance;
-use App\Models\User;
 use App\Models\LeaveRequest;
+use App\Models\User;
 use App\Services\GeofenceService;
 use Carbon\Carbon;
+use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
-use Filament\Actions\Action;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Actions\Contracts\HasActions;
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Forms\Concerns\InteractsWithForms;
 
 class AttendanceScanner extends Widget implements HasForms, HasActions
 {
