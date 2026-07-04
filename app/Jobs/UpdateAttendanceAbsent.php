@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Queue\Queueable;
+Use Illuminate\Support\Facades\DB;
 
 class UpdateAttendanceAbsent implements ShouldQueue
 {
@@ -39,16 +40,12 @@ class UpdateAttendanceAbsent implements ShouldQueue
 
     public function storeUserAttendance(Collection $users): void
     {
-        foreach($users as $user) {
-            Attendance::firstOrCreate(
-                [
-                    'user_id' => $user->id,
-                ],
-                [
-                    'checkin_date' => today(),
-                    'status' => AttendanceStatus::Absent,
-                ]
-            );
+        foreach ($users as $user) {
+            DB::table('attendances')->insertOrIgnore([
+                'user_id' => $user->id,
+                'checkin_date' => today(),
+                'status' => AttendanceStatus::Absent->value,
+            ]);
         }
     }
 }
