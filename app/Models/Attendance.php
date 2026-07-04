@@ -31,7 +31,15 @@ class Attendance extends Model
     protected function type(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->checkout_time ? 'Checkout' : 'Check In'
+            get: function () {
+                if (!$this->checkin_time) {
+                    return 'Alpha';
+                } elseif ($this->checkout_time){
+                    return 'Check out';
+                } else {
+                    return 'Check in';
+                }
+            },
         );
     }
 
