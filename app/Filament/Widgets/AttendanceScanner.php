@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\AttendanceStatus;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\LeaveRequest;
@@ -49,7 +50,7 @@ public function leaveRequestAction(): Action
             ->color('warning')
             ->modalHeading('Ajukan Izin / Cuti')
             ->modalDescription('Isi form berikut untuk mengajukan izin atau cuti.')
-            ->modalWidth('lg')
+            ->modalWidth('xl')
             ->schema([
                 Select::make('type')
                     ->label('Jenis')
@@ -188,15 +189,16 @@ public function leaveRequestAction(): Action
 
     private function storeAttendance($user): Attendance
     {
-        // firstOrCreate guards against a duplicate insert if two requests
-        // race past the alreadyCheckedIn check at nearly the same time.
+        $checkin_time = Carbon::now();
+
         return Attendance::firstOrCreate(
             [
                 'user_id' => $user->id,
                 'checkin_date' => today(),
             ],
             [
-                'checkin_time' => Carbon::now(),
+                'checkin_time' => $checkin_time,
+                'status' => $this->checkAttendanceStatus($user, $checkin_time),
             ]
         );
     }
@@ -209,5 +211,18 @@ public function leaveRequestAction(): Action
             ->update(['checkout_time' => Carbon::now()]);
 
         return $updated > 0;
+    }
+
+    private function checkAttendanceStatus(User $user, Carbon $checkin_time): AttendanceStatus
+    {
+        $work_time = $user->employeeProfile?->work_time_start;
+
+        if (!$work_time) {
+            return AttendanceStatus::Attend;
+        }
+
+        return $checkin_time->gt(Carbon::parse($work_time))
+            ? AttendanceStatus::Late
+            : AttendanceStatus::Attend;
     }
 }

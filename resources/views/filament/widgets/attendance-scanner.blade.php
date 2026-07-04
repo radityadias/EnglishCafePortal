@@ -79,9 +79,9 @@
                         </div>
                     @endif
                 </div>
-                <div class="w-full flex justify-center">
-                    {{ $this->leaveRequestAction }}
-                </div>
+
+                {{ $this->leaveRequestAction  }}
+
             </div>
         </div>
     </x-filament::section>

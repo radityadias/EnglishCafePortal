@@ -14,6 +14,8 @@ class AttendancesTable
     {
         return $table
             ->columns([
+                TextColumn::make('user.name')
+                    ->searchable(),
                 TextColumn::make('status')
                     ->searchable(),
                 TextColumn::make('checkin_date')
@@ -25,8 +27,6 @@ class AttendancesTable
                 TextColumn::make('checkout_time')
                     ->time()
                     ->sortable(),
-                TextColumn::make('user.name')
-                    ->searchable(),
             ])
             ->filters([
                 //

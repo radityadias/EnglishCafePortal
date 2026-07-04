@@ -52,19 +52,24 @@ class AttendanceResource extends Resource
         return $table
             ->recordTitleAttribute('attendance')
             ->columns([
+                TextColumn::make('user.name')
+                    ->label('Nama')
+                    ->searchable(),
                 TextColumn::make('status')
+                    ->label('Status')
                     ->searchable(),
                 TextColumn::make('checkin_date')
+                    ->label('Tanggal Masuk')
                     ->date()
                     ->sortable(),
                 TextColumn::make('checkin_time')
+                    ->label('Jam Masuk')
                     ->time()
                     ->sortable(),
                 TextColumn::make('checkout_time')
+                    ->label('Jam Keluar')
                     ->time()
                     ->sortable(),
-                TextColumn::make('user.name')
-                    ->searchable(),
             ])
             ->filters([
                 //
