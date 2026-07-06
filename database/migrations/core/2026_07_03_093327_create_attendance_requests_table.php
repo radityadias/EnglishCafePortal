@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('leave_requests', function (Blueprint $table) {
+        Schema::create('attendance_requests', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['sick', 'leave', 'personal', 'other']);
-            $table->text('reason'); 
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->string('reason');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->string('image_path')->nullable();
+            $table->string('image_path');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('leave_requests');
+        Schema::dropIfExists('attendance_requests');
     }
 };

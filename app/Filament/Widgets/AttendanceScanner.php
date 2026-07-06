@@ -2,23 +2,24 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\AttendanceStatus;
 use App\Models\Attendance;
-use App\Models\LeaveRequest;
 use App\Models\User;
+use App\Models\LeaveRequest;
+use App\Models\AttendanceRequest;
 use App\Services\GeofenceService;
 use Carbon\Carbon;
-use Filament\Actions\Action;
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Forms\Concerns\InteractsWithForms;
 
 class AttendanceScanner extends Widget implements HasForms, HasActions
 {
@@ -50,7 +51,7 @@ public function leaveRequestAction(): Action
             ->color('warning')
             ->modalHeading('Ajukan Izin / Cuti')
             ->modalDescription('Isi form berikut untuk mengajukan izin atau cuti.')
-            ->modalWidth('xl')
+            ->modalWidth('lg')
             ->schema([
                 Select::make('type')
                     ->label('Jenis')
@@ -78,6 +79,15 @@ public function leaveRequestAction(): Action
                     ->required()
                     ->rows(3)
                     ->maxLength(500),
+                FileUpload::make('image')
+                    ->label('Bukti Foto')
+                    ->image()
+                    ->required()
+                    ->directory('absen')
+                    ->disk('s3')
+                    ->preventFilePathTampering(
+                        allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'absen/')
+                    )
             ])
             ->action(function (array $data): void {
                 LeaveRequest::create([
@@ -87,9 +97,47 @@ public function leaveRequestAction(): Action
                     'end_date'   => $data['end_date'],
                     'reason'     => $data['reason'],
                     'status'     => 'pending',
+                    'image'      => $data['image'],
                 ]);
             });
     }
+
+    public function attendanceRequestAction(): Action
+    {
+        return Action::make('attendanceRequest')
+            ->label('Absen Manual')
+            ->icon('heroicon-o-document-text')
+            ->color('info')
+            ->modalHeading('Ajukan Absen Manual')
+            ->modalDescription('Isi form berikut untuk mengajukan absen manual.')
+            ->modalWidth('lg')
+            ->schema([
+                Textarea::make('reason')
+                    ->label('Alasan')
+                    ->required()
+                    ->rows(3)
+                    ->maxLength(500),
+
+                FileUpload::make('image')
+                    ->label('Bukti Foto')
+                    ->image()
+                    ->required()
+                    ->directory('absen')
+                    ->disk('s3')
+                    ->preventFilePathTampering(
+                        allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'absen/')
+                    )
+            ])
+            ->action(function (array $data): void {
+                AttendanceRequest::create([
+                    'user_id'    => Auth::id(),
+                    'reason'     => $data['reason'],
+                    'image'      => $data['image'],
+                    'status'     => ConfirmationStatus::Pending->value,
+                ]);
+            });
+    }
+
     public function processAttendance(float $latitude, float $longitude): void
     {
         $user = $this->getAuthUser();
@@ -189,16 +237,15 @@ public function leaveRequestAction(): Action
 
     private function storeAttendance($user): Attendance
     {
-        $checkin_time = Carbon::now();
-
+        // firstOrCreate guards against a duplicate insert if two requests
+        // race past the alreadyCheckedIn check at nearly the same time.
         return Attendance::firstOrCreate(
             [
                 'user_id' => $user->id,
                 'checkin_date' => today(),
             ],
             [
-                'checkin_time' => $checkin_time,
-                'status' => $this->checkAttendanceStatus($user, $checkin_time),
+                'checkin_time' => Carbon::now(),
             ]
         );
     }
@@ -211,18 +258,5 @@ public function leaveRequestAction(): Action
             ->update(['checkout_time' => Carbon::now()]);
 
         return $updated > 0;
-    }
-
-    private function checkAttendanceStatus(User $user, Carbon $checkin_time): AttendanceStatus
-    {
-        $work_time = $user->employeeProfile?->work_time_start;
-
-        if (!$work_time) {
-            return AttendanceStatus::Attend;
-        }
-
-        return $checkin_time->gt(Carbon::parse($work_time))
-            ? AttendanceStatus::Late
-            : AttendanceStatus::Attend;
     }
 }

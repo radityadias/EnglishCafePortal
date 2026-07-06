@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this->hasMany(LeaveRequest::class);
     }
 
+    public function attendanceRequest() : HasMany
+    {
+        return $this->hasMany(AttendanceRequest::class);
+    }
+
     public function attendances() : HasMany
     {
         return $this->hasMany(Attendance::class);
