@@ -5,8 +5,10 @@ namespace App\Filament\Widgets;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\LeaveRequest;
+use App\Models\AttendanceRequest;
 use App\Services\GeofenceService;
 use Carbon\Carbon;
+use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
@@ -77,6 +79,15 @@ public function leaveRequestAction(): Action
                     ->required()
                     ->rows(3)
                     ->maxLength(500),
+                FileUpload::make('image')
+                    ->label('Bukti Foto')
+                    ->image()
+                    ->required()
+                    ->directory('absen')
+                    ->disk('s3')
+                    ->preventFilePathTampering(
+                        allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'absen/')
+                    )
             ])
             ->action(function (array $data): void {
                 LeaveRequest::create([
@@ -86,9 +97,47 @@ public function leaveRequestAction(): Action
                     'end_date'   => $data['end_date'],
                     'reason'     => $data['reason'],
                     'status'     => 'pending',
+                    'image'      => $data['image'],
                 ]);
             });
     }
+
+    public function attendanceRequestAction(): Action
+    {
+        return Action::make('attendanceRequest')
+            ->label('Absen Manual')
+            ->icon('heroicon-o-document-text')
+            ->color('info')
+            ->modalHeading('Ajukan Absen Manual')
+            ->modalDescription('Isi form berikut untuk mengajukan absen manual.')
+            ->modalWidth('lg')
+            ->schema([
+                Textarea::make('reason')
+                    ->label('Alasan')
+                    ->required()
+                    ->rows(3)
+                    ->maxLength(500),
+
+                FileUpload::make('image')
+                    ->label('Bukti Foto')
+                    ->image()
+                    ->required()
+                    ->directory('absen')
+                    ->disk('s3')
+                    ->preventFilePathTampering(
+                        allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'absen/')
+                    )
+            ])
+            ->action(function (array $data): void {
+                AttendanceRequest::create([
+                    'user_id'    => Auth::id(),
+                    'reason'     => $data['reason'],
+                    'image'      => $data['image'],
+                    'status'     => ConfirmationStatus::Pending->value,
+                ]);
+            });
+    }
+
     public function processAttendance(float $latitude, float $longitude): void
     {
         $user = $this->getAuthUser();

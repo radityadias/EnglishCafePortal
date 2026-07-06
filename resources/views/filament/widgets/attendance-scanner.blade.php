@@ -81,6 +81,7 @@
                 </div>
                 <div class="w-full flex justify-center">
                     {{ $this->leaveRequestAction }}
+                    {{ $this->attendanceRequestAction }}
                 </div>
             </div>
         </div>
