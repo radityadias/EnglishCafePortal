@@ -252,11 +252,17 @@ public function leaveRequestAction(): Action
 
     private function updateAttendance($user): bool
     {
-        $updated = Attendance::where('user_id', $user->id)
+        $attendance = Attendance::where('user_id', $user->id)
             ->whereDate('checkin_date', today())
             ->whereNull('checkout_time')
-            ->update(['checkout_time' => Carbon::now()]);
+            ->first();
 
-        return $updated > 0;
+        if (!$attendance) {
+            return false;
+        }
+
+        $attendance->update(['checkout_time' => Carbon::now()]);
+
+        return true;
     }
 }

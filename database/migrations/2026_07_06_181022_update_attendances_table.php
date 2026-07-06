@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendance_recaps', function (Blueprint $table) {
-            $table->id();
-            $table->float('total_hours')->nullable();
-            $table->integer('sick_leaves')->nullable();
-            $table->integer('absent_leaves')->nullable();
-            $table->timestamps();
+        Schema::table('attendance_recaps', function (Blueprint $table) {
+            $table->float('total_hours')->nullable()->change();
+            $table->integer('sick_leaves')->nullable()->change();
+            $table->integer('absent_leaves')->nullable()->change();
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendances_recaps');
+        //
     }
 };
