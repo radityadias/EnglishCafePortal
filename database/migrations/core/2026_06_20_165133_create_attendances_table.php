@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('checkin_date')->nullable();
             $table->time('checkin_time')->nullable();
             $table->time('checkout_time')->nullable();
+            $table->float('working_time')->nullable();
         });
     }
 

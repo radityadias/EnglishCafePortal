@@ -41,11 +41,15 @@ class UpdateAttendanceAbsent implements ShouldQueue
     public function storeUserAttendance(Collection $users): void
     {
         foreach ($users as $user) {
-            DB::table('attendances')->insertOrIgnore([
-                'user_id' => $user->id,
-                'checkin_date' => today(),
-                'status' => AttendanceStatus::Absent->value,
-            ]);
+            Attendance::firstOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'checkin_date' => today(),
+                ],
+                [
+                    'status' => AttendanceStatus::Absent,
+                ]
+            );
         }
     }
 }

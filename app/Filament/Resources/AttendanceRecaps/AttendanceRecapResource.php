@@ -53,17 +53,21 @@ class AttendanceRecapResource extends Resource
         return $table
             ->recordTitleAttribute('attendance_recap')
             ->columns([
+                TextColumn::make('user.name')
+                    ->label('Nama')
+                    ->searchable(),
                 TextColumn::make('total_hours')
+                    ->label('Total Jam')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('sick_leaves')
+                    ->label('Izin Sakit')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('absent_leaves')
+                    ->label('Tanpa Keterangan')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('user.name')
-                    ->searchable(),
             ])
             ->filters([
                 //

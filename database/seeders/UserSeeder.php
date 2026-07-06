@@ -18,14 +18,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-//        $user = User::factory()->create([
-//            'name' => 'English Cafe Admin',
-//            'email' => 'admin.englishcafe@gmail.com',
-//            'password' => bcrypt('englishcafealwaysdifferent'),
-//            'password_set_at' => now(),
-//            'position' => 'Super Admin',
-//        ]);
-        $user = User::first();
+        $user = User::factory()->create([
+            'name' => 'English Cafe Admin',
+            'email' => 'admin.englishcafe@gmail.com',
+            'password' => bcrypt('englishcafealwaysdifferent'),
+            'password_set_at' => now(),
+            'position' => 'Super Admin',
+        ]);
 
         EmployeeProfile::firstOrCreate(
             [
