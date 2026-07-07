@@ -9,6 +9,7 @@ use App\Models\AttendanceRequest;
 use App\Services\GeofenceService;
 use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
+use App\Enums\ConfirmationStatus;
 use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
@@ -88,7 +89,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
                     ->disk('s3')
                     ->preventFilePathTampering(
                         allowFilePathUsing: fn(string $file): bool => str_starts_with($file, 'absen/')
-                    )
+                    ),
             ])
             ->action(function (array $data): void {
                 LeaveRequest::create([
@@ -128,6 +129,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
                     ->preventFilePathTampering(
                         allowFilePathUsing: fn(string $file): bool => str_starts_with($file, 'absen/')
                     )
+                ,
             ])
             ->action(function (array $data): void {
                 AttendanceRequest::create([

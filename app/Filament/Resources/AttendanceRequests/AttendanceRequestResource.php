@@ -13,6 +13,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use App\Enums\ConfirmationStatus;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use UnitEnum;
@@ -44,8 +45,30 @@ class AttendanceRequestResource extends Resource
         return $table
             ->recordTitleAttribute('attendance_request')
             ->columns([
-                TextColumn::make('attendance_request')
+                TextColumn::make('user.name')
+                    ->label('Nama')
                     ->searchable(),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->searchable(),
+                TextColumn::make('reason')
+                    ->label('Alasan')
+                    ->searchable(),
+                TextColumn::make('date')
+                    ->label('Tanggal')
+                    ->date()
+                    ->searchable(),
+                TextColumn::make('image_path')
+                    ->label('Bukti Foto')
+                    ->searchable(),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (ConfirmationStatus $state) => match ($state) {
+                        ConfirmationStatus::Pending => 'warning',
+                        ConfirmationStatus::Approved => 'success',
+                        ConfirmationStatus::Rejected => 'danger',
+                    }),
             ])
             ->filters([
                 //
