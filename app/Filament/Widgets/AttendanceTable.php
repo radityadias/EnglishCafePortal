@@ -8,15 +8,23 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 
 class AttendanceTable extends TableWidget
 {
     public static int | null $sort = 3;
     public array | int | string $columnSpan = 'full';
 
+    #[On('attendance_scanned')]
+    public function refresh(): void
+    {
+        //
+    }
+
     public function table(Table $table): Table
     {
         return $table
+            ->poll('30s')
             ->query(fn (): Builder => \App\Models\Attendance::query())
             ->columns([
                 TextColumn::make('user.name')
@@ -35,15 +43,6 @@ class AttendanceTable extends TableWidget
                         AttendanceStatus::Late => 'warning',
                         AttendanceStatus::Absent => 'danger',
                     }),
-            ])
-            ->filters([
-                //
-            ])
-            ->headerActions([
-                //
-            ])
-            ->recordActions([
-                //
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

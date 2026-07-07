@@ -29,7 +29,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
 
     protected static ?int $sort = 2;
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     private const float ALLOWED_RADIUS = 50.0;
     private const float LATITUDE = -7.8161472;
@@ -43,7 +43,8 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
         $this->alreadyCheckedIn = $this->isAlreadyCheckedIn();
         $this->alreadyCheckedOut = $this->isAlreadyCheckedOut();
     }
-public function leaveRequestAction(): Action
+
+    public function leaveRequestAction(): Action
     {
         return Action::make('leaveRequest')
             ->label('Ajukan Izin')
@@ -56,10 +57,10 @@ public function leaveRequestAction(): Action
                 Select::make('type')
                     ->label('Jenis')
                     ->options([
-                        'sick'      => 'Sakit',
-                        'leave'     => 'Cuti',
-                        'personal'  => 'Keperluan Pribadi',
-                        'other'     => 'Lainnya',
+                        'sick' => 'Sakit',
+                        'leave' => 'Cuti',
+                        'personal' => 'Keperluan Pribadi',
+                        'other' => 'Lainnya',
                     ])
                     ->required(),
 
@@ -86,18 +87,18 @@ public function leaveRequestAction(): Action
                     ->directory('absen')
                     ->disk('s3')
                     ->preventFilePathTampering(
-                        allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'absen/')
+                        allowFilePathUsing: fn(string $file): bool => str_starts_with($file, 'absen/')
                     )
             ])
             ->action(function (array $data): void {
                 LeaveRequest::create([
-                    'user_id'    => Auth::id(),
-                    'type'       => $data['type'],
+                    'user_id' => Auth::id(),
+                    'type' => $data['type'],
                     'start_date' => $data['start_date'],
-                    'end_date'   => $data['end_date'],
-                    'reason'     => $data['reason'],
-                    'status'     => 'pending',
-                    'image'      => $data['image'],
+                    'end_date' => $data['end_date'],
+                    'reason' => $data['reason'],
+                    'status' => 'pending',
+                    'image' => $data['image'],
                 ]);
             });
     }
@@ -125,15 +126,15 @@ public function leaveRequestAction(): Action
                     ->directory('absen')
                     ->disk('s3')
                     ->preventFilePathTampering(
-                        allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'absen/')
+                        allowFilePathUsing: fn(string $file): bool => str_starts_with($file, 'absen/')
                     )
             ])
             ->action(function (array $data): void {
                 AttendanceRequest::create([
-                    'user_id'    => Auth::id(),
-                    'reason'     => $data['reason'],
-                    'image'      => $data['image'],
-                    'status'     => ConfirmationStatus::Pending->value,
+                    'user_id' => Auth::id(),
+                    'reason' => $data['reason'],
+                    'image' => $data['image'],
+                    'status' => ConfirmationStatus::Pending->value,
                 ]);
             });
     }
@@ -174,6 +175,7 @@ public function leaveRequestAction(): Action
         $attendance = $this->storeAttendance($user);
 
         $this->alreadyCheckedIn = true;
+        $this->refreshTable();
 
         if ($attendance->wasRecentlyCreated) {
             $this->sendNotification('success', __('notification.success_title'), __('notification.success_description'));
@@ -188,6 +190,7 @@ public function leaveRequestAction(): Action
         $updated = $this->updateAttendance($user);
 
         $this->alreadyCheckedOut = true;
+        $this->refreshTable();
 
         if ($updated) {
             $this->sendNotification('success', __('notification.success_title'), __('notification.success_description'));
@@ -228,6 +231,11 @@ public function leaveRequestAction(): Action
             ->body($description)
             ->status($type)
             ->send();
+    }
+
+    private function refreshTable(): void
+    {
+        $this->dispatch('attendance_scanned');
     }
 
     private function instantiateGeofenceService(): GeofenceService
