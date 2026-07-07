@@ -72,6 +72,11 @@ class AttendanceObserver
        return is_null($attendance->checkout_time);
     }
 
+    public function isUserLeave(): bool
+    {
+        //
+    }
+
     public function storeAttendanceRecap(Attendance $attendance): void
     {
        AttendanceRecap::firstOrCreate(

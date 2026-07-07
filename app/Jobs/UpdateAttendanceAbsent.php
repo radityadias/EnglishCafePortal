@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Queue\Queueable;
-Use Illuminate\Support\Facades\DB;
 
 class UpdateAttendanceAbsent implements ShouldQueue
 {
@@ -26,19 +25,36 @@ class UpdateAttendanceAbsent implements ShouldQueue
      */
     public function handle(): void
     {
-        $users = $this->getAbsentUser();
+        $absent = $this->getAbsentUser();
+        $leave = $this->getLeaveUser();
 
-        $this->storeUserAttendance($users);
+        $this->storeAttendanceAbsent($absent);
+        $this->storeAttendanceLeave($leave);
     }
 
     public function getAbsentUser(): Collection
     {
         return User::whereDoesntHave('attendances', function ($query) {
             $query->whereDate('checkin_date', today());
-        })->get();
+        })
+            ->whereDoesntHave('leaveRequest', function ($query) {
+                $query->where('start_date', '<=', today())
+                    ->where('end_date', '>=', today());
+            })
+            ->get();
     }
 
-    public function storeUserAttendance(Collection $users): void
+    public function getLeaveUser(): Collection
+    {
+        return User::whereHas('leaveRequest', function ($query) {
+            $query->where('start_date', '<=', today())
+                ->where('end_date', '>=', today())
+                ->where('status', 'approved');
+        })
+            ->get();
+    }
+
+    public function storeAttendanceAbsent(Collection $users): void
     {
         foreach ($users as $user) {
             Attendance::firstOrCreate(
@@ -51,5 +67,21 @@ class UpdateAttendanceAbsent implements ShouldQueue
                 ]
             );
         }
+    }
+
+    public function storeAttendanceLeave(Collection $users): void
+    {
+        foreach ($users as $user) {
+            Attendance::firstOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'checkin_date' => today(),
+                ],
+                [
+                    'status' => AttendanceStatus::Leave,
+                ]
+            );
+        }
+
     }
 }

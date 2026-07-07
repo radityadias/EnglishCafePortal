@@ -11,8 +11,6 @@ class Attendance extends Model
 {
     protected $table = 'attendances';
 
-    public $timestamps = false;
-
     protected $fillable = [
         'user_id',
         'status',
