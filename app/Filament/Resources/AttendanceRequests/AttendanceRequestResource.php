@@ -13,8 +13,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use App\Enums\ConfirmationStatus;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
 use UnitEnum;
 
 class AttendanceRequestResource extends Resource
@@ -44,7 +46,37 @@ class AttendanceRequestResource extends Resource
         return $table
             ->recordTitleAttribute('attendance_request')
             ->columns([
-                TextColumn::make('attendance_request')
+                TextColumn::make('user.name')
+                    ->label('Nama')
+                    ->searchable(),
+                TextColumn::make('reason')
+                    ->label('Alasan')
+                    ->searchable(),
+                TextColumn::make('date')
+                    ->label('Tanggal')
+                    ->date()
+                    ->searchable(),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (ConfirmationStatus $state) => match ($state) {
+                        ConfirmationStatus::Pending => 'warning',
+                        ConfirmationStatus::Approved => 'success',
+                        ConfirmationStatus::Rejected => 'danger',
+                    }),
+                TextColumn::make('image_path')
+                    ->label('Bukti Foto')
+                    ->icon(Heroicon::Photo)
+                    ->formatStateUsing(fn ($state) => $state ? 'Foto' : '-')
+                    ->url(function ($record) {
+                        if (!$record->image_path) {
+                            return null;
+                        }
+
+                        return Storage::disk('s3')->temporaryUrl($record->image_path, now()->addMinutes(5));
+                    })
+                    ->openUrlInNewTab()
+                    ->color(fn ($state) => $state ? 'blue' : 'gray')
                     ->searchable(),
             ])
             ->filters([

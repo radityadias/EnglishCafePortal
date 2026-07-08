@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ConfirmationStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,6 +16,13 @@ class AttendanceRequest extends Model
         'date',
         'image_path',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => ConfirmationStatus::class,
+        ];
+    }
 
     public function user() : BelongsTo
     {

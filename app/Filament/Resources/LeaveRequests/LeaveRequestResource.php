@@ -16,6 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use App\Enums\ConfirmationStatus;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -87,6 +88,14 @@ class LeaveRequestResource extends Resource
                     ->label ('Tanggal Selesai'),
                 TextColumn::make('status')
                     ->searchable(),
+                TextCoulmn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (ConfirmationStatus $state) => match ($state) {
+                        ConfirmationStatus::Pending => 'warning',
+                        ConfirmationStatus::Approved => 'success',
+                        ConfirmationStatus::Rejected => 'danger',
+                    }),
             ])
             ->filters([
                 //
