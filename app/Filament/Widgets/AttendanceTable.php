@@ -29,6 +29,8 @@ class AttendanceTable extends TableWidget
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama'),
+                TextColumn::make('checkin_date')
+                    ->label('Tanggal'),
                 TextColumn::make('type')
                     ->label('Jenis'),
                 TextColumn::make('time')
@@ -50,4 +52,6 @@ class AttendanceTable extends TableWidget
                 ]),
             ]);
     }
+
+
 }

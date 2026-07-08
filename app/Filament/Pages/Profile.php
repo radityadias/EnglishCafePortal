@@ -1,21 +1,45 @@
 <?php
 
-namespace App\Filament\Resources\Employees\Schemas;
+namespace App\Filament\Pages;
 
-use App\Enums\Position;
-use App\Models\Branch;
+use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Pages\Page;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
-use App\Models\User;
+use Filament\Support\Icons\Heroicon;
+use Filament\Forms\Contracts\HasForms;
+use BackedEnum;
+use Illuminate\Support\Facades\Auth;
+use UnitEnum;
 
-class EmployeeForm
+class Profile extends Page implements hasForms
 {
-    public static function configure(Schema $schema): Schema
+    use InteractsWithForms;
+
+    protected string $view = 'filament.pages.profile';
+    protected static ?string $model = User::class;
+    protected static ?string $title = 'Profile';
+    protected static null | string | UnitEnum $navigationGroup = 'Akun';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::User;
+
+//    public function mount(): void
+//    {
+//        $user = Auth::user()->load('employeeProfile');
+//
+//        dd([
+//            'user' => $user->toArray(),
+//            'employeeProfile' => $user->employeeProfile?->toArray(),
+//        ]);
+//    }
+
+    public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
@@ -26,19 +50,10 @@ class EmployeeForm
                             ->label('Nama Lengkap'),
                         TextInput::make('email')
                             ->label('Email'),
-                        TextInput::make('phone')
-                            ->label('No. Telp'),
-                        Select::make('position')
-                            ->label('Posisi')
-                            ->options([
-                                Position::Employee->value => 'Karyawan',
-                            ])
-                            ->default('Karyawan')
-                            ->disabled()
                     ]),
+
                 Group::make()
                     ->columns(2)
-                    ->relationship('employeeProfile')
                     ->schema([
                         TextInput::make('nickname')
                             ->label('Nama Panggilan'),
@@ -86,7 +101,32 @@ class EmployeeForm
                                 allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'ktp/')
                             )
                     ]),
-            ])
-            ->columns(1);
+            ]);
+    }
+
+    public function saveAction(): Action
+    {
+        return Action::make('save')
+            ->action(function (array $data): void {
+                $user = Auth::user();
+                $user->update([
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'phone' => $data['phone'],
+                ]);
+                $user->employeeProfile()->update([
+                    'nickname' => $data['nickname'],
+                    'birth_place' => $data['birth_place'],
+                    'birth_date' => $data['birth_date'],
+                    'address' => $data['address'],
+                    'work_time_start' => $data['work_time_start'],
+                    'work_time_end' => $data['work_time_end'],
+                    'bank_name' => $data['bank_name'],
+                    'bank_number' => $data['bank_number'],
+                    'bank_account_name' => $data['bank_account_name'],
+                    'cv_path' => $data['cv_path'],
+                    'ktp_path' => $data['ktp_path'],
+                ]);
+            });
     }
 }

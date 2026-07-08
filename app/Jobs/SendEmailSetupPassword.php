@@ -30,7 +30,7 @@ class SendEmailSetupPassword implements ShouldQueue
      */
     public function handle(): void
     {
-        if ($this->hasSetPassword()) {
+        if ($this->user->hasSetPassword()) {
             return;
         }
 
@@ -38,7 +38,7 @@ class SendEmailSetupPassword implements ShouldQueue
 
         $setupUrl = route('password.setup', [
             'token' => $token,
-            'email' => $this->user->email
+            'email' => 'radityadias24@gmail.com'
         ]);
 
         Mail::to($this->user->email)
