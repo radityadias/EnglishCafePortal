@@ -15,6 +15,7 @@ use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
+use App\Enums\LeaveType;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Contracts\HasForms;
@@ -58,10 +59,10 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
                 Select::make('type')
                     ->label('Jenis')
                     ->options([
-                        'sick' => 'Sakit',
-                        'leave' => 'Cuti',
-                        'personal' => 'Keperluan Pribadi',
-                        'other' => 'Lainnya',
+                        LeaveType::Sick->value => 'Sakit',
+                        LeaveType::Leave->value => 'Cuti',
+                        LeaveType::Personal->value => 'Izin Pribadi',
+                        LeaveType::Other->value => 'Lainnya',
                     ])
                     ->required(),
 
@@ -81,7 +82,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
                     ->required()
                     ->rows(3)
                     ->maxLength(500),
-                FileUpload::make('image')
+                FileUpload::make('image_path')
                     ->label('Bukti Foto')
                     ->image()
                     ->required()
@@ -89,7 +90,8 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
                     ->disk('s3')
                     ->preventFilePathTampering(
                         allowFilePathUsing: fn(string $file): bool => str_starts_with($file, 'absen/')
-                    ),
+                    )
+                ,
             ])
             ->action(function (array $data): void {
                 LeaveRequest::create([

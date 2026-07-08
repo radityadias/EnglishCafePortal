@@ -14,6 +14,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use App\Enums\LeaveType;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use App\Enums\ConfirmationStatus;
@@ -50,18 +51,34 @@ class LeaveRequestResource extends Resource
                         'approved' => 'Approved',
                         'rejected' => 'Rejected',
                     ]),
-                FileUpload::make('image')
-                    ->image(),
+                TextColumn::make('image_path')
+                    ->label('Bukti Foto')
+                    ->icon(Heroicon::Photo)
+                    ->formatStateUsing(fn ($state) => $state ? 'Foto' : '-')
+                    ->url(function ($record) {
+                        if (!$record->image_path) {
+                            return null;
+                        }
+
+                        return Storage::disk('s3')->temporaryUrl($record->image_path, now()->addMinutes(5));
+                    })
+                    ->openUrlInNewTab()
+                    ->color(fn ($state) => $state ? 'blue' : 'gray')
+                    ->searchable(),
                 Select::make('user_id')
                     ->relationship('user', 'name')
                     ->preload()
                     ->label ('Nama Pengguna')
                     ->searchable()
                     ->required(),
-                Select::make('leave_type_id')
-                    ->relationship('leaveType', 'name')
+                Select::make('type')
                     ->label ('Jenis Cuti')
-                    ->preload()
+                    ->options([
+                        LeaveType::Sick->value => 'Sakit',
+                        LeaveType::Leave->value => 'Cuti',
+                        LeaveType::Personal->value => 'Keperluan Pribadi',
+                        LeaveType::Other->value => 'Lainnya',
+                    ])
                     ->searchable()
                     ->required(),
             ]);
@@ -75,7 +92,7 @@ class LeaveRequestResource extends Resource
                 TextColumn::make('user.name')
                 ->searchable()
                 ->label ('Nama'),
-                TextColumn::make('leaveType.name')
+                TextColumn::make('type')
                     ->searchable()
                     ->label ('Jenis'),
                 TextColumn::make('start_date')
@@ -88,7 +105,7 @@ class LeaveRequestResource extends Resource
                     ->label ('Tanggal Selesai'),
                 TextColumn::make('status')
                     ->searchable(),
-                TextCoulmn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
                     ->badge()
                     ->color(fn (ConfirmationStatus $state) => match ($state) {

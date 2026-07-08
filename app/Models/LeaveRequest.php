@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\ConfirmationStatus;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LeaveRequest extends Model
@@ -12,11 +13,10 @@ class LeaveRequest extends Model
         'user_id',
         'type',
         'reason',
-        'leave_type_id',
         'start_date',
         'end_date',
         'status',
-        'image',
+        'image_path',
     ];
 
     protected function casts(): array
@@ -24,15 +24,11 @@ class LeaveRequest extends Model
         return [
             'start_date' => 'date',
             'end_date' => 'date',
+            'status' => ConfirmationStatus::class,
         ];
     }
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function leaveType() : BelongsTo
-    {
-        return $this->belongsTo(LeaveType::class);
     }
 }
