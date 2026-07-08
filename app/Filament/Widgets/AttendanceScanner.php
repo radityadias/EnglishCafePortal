@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\AttendanceStatus;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\LeaveRequest;
@@ -245,8 +246,14 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
         return app(GeofenceService::class);
     }
 
+    private function checkAttendanceStatus(User $user,Carbon $checkin_time): AttendanceStatus
+    {
+        return $checkin_time->gt($user->employeeProfile->work_time_start) ? AttendanceStatus::Late : AttendanceStatus::Attend;
+    }
+
     private function storeAttendance($user): Attendance
     {
+        $checkin_time = Carbon::now();
         // firstOrCreate guards against a duplicate insert if two requests
         // race past the alreadyCheckedIn check at nearly the same time.
         return Attendance::firstOrCreate(
@@ -255,7 +262,8 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
                 'checkin_date' => today(),
             ],
             [
-                'checkin_time' => Carbon::now(),
+                'checkin_time' => $checkin_time,
+                'status' => $this->checkAttendanceStatus($user, $checkin_time),
             ]
         );
     }
