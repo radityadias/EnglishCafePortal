@@ -15,15 +15,15 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        if (!$user->hasSetPassword()) {
-            SendEmailSetupPassword::dispatch($user);
-        }
-
-        if ($this->isUserHasProfile($user)) {
-            return;
-        }
-
-        $this->processStoreProfile($user);
+//        if (!$user->hasSetPassword()) {
+//            SendEmailSetupPassword::dispatch($user);
+//        }
+//
+//        if ($this->isUserHasProfile($user)) {
+//            return;
+//        }
+//
+//        $this->processStoreProfile($user);
     }
 
     /**

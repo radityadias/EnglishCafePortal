@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users;
 
+use App\Enums\Position;
 use App\Filament\Resources\Users\Pages\ManageUsers;
 use App\Models\User;
 use BackedEnum;
@@ -10,7 +11,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use ResendSetupLinkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -42,21 +42,20 @@ class UserResource extends Resource
                     ->email()
                     ->required(),
                 TextInput::make('phone')
-                    ->label('No. Telp'),
+                    ->label('Nomor Telepon'),
                 Select::make('position')
                     ->label('Posisi')
                     ->required()
                     ->options([
-                        'Onboarding' => 'Onboarding',
-                        'Training' => 'Training',
-                        'Internship' => 'Internship',
-                        'Karyawan' => 'Karyawan',
-                        'Nonaktif' => 'Nonaktif',
-                        'Admin' => 'Admin',
-                        'Super Admin' => 'Super Admin',
+                        Position::Employee->value => 'Karyawan',
+                        Position::Internship->value => 'Internship',
+                        Position::Onboarding->value => 'Onboarding',
+                        Position::Training->value => 'Training',
+                        Position::Nonactive->value => 'Nonaktif',
+                        Position::Admin->value => 'Admin',
                     ])
                     ->default('Nonaktif'),
-                Select::make('roles')
+                Select::make('roles ')
                     ->label('Role')
                     ->relationship('roles', 'name')
                     ->preload()
