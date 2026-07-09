@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Enums\AttendanceStatus;
+use App\Enums\Position;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\LeaveRequest;
@@ -104,7 +105,8 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
                     'status' => 'pending',
                     'image' => $data['image'],
                 ]);
-            });
+            })
+            ->disabled(fn(): bool => $this->isLeaveRequestExist($this->getAuthUser()));
     }
 
     public function attendanceRequestAction(): Action
@@ -139,9 +141,10 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
                     'user_id' => Auth::id(),
                     'reason' => $data['reason'],
                     'image_path' => $data['image_path'],
-                    'status' => ConfirmationStatus::Pending
+                    'status' => ConfirmationStatus::Pending->value
                 ]);
-            });
+            })
+            ->disabled(fn (): bool => $this->alreadyCheckedOut);
     }
 
     public function processAttendance(float $latitude, float $longitude): void
@@ -149,6 +152,12 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
         $user = $this->getAuthUser();
 
         if (!$user) {
+            $this->sendNotification('error', __('notification.error_title'), __('notification.error_description'), ['name' => $user->name]);
+            return;
+        }
+
+        if ($this->isBranchNotConfigured($user))
+        {
             $this->sendNotification('error', __('notification.error_title'), __('notification.error_description'));
             return;
         }
@@ -214,6 +223,19 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
         return !$branch || !$branch->latitude || !$branch->longitude;
     }
 
+    private function isLeaveRequestExist($user): bool
+    {
+        return $user->leaveRequest()
+            ->where('start_date', '<=', Carbon::now())
+            ->where('end_date', '>=', Carbon::now())
+            ->exists();
+    }
+
+    private function isEmployee($user): bool
+    {
+        return $user->position === Position::Employee;
+    }
+
     private function isAlreadyCheckedIn(): bool
     {
         return Attendance::where('user_id', Auth::id())
@@ -248,9 +270,21 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
         return app(GeofenceService::class);
     }
 
-    private function checkAttendanceStatus(User $user,Carbon $checkin_time): AttendanceStatus
+        private function checkAttendanceStatus(User $user,Carbon $checkin_time): AttendanceStatus
     {
-        return $checkin_time->gt($user->employeeProfile->work_time_start) ? AttendanceStatus::Late : AttendanceStatus::Attend;
+        if ($this->isEmployee($user)) {
+            $workTimeStart = $user->employeeProfile?->work_time_start;
+
+            if (!$workTimeStart) {
+                return AttendanceStatus::Attend;
+            }
+
+            return $checkin_time->gt(Carbon::parse($workTimeStart))
+                ? AttendanceStatus::Late
+                : AttendanceStatus::Attend;
+        }
+
+        return AttendanceStatus::Attend;
     }
 
     private function storeAttendance($user): Attendance

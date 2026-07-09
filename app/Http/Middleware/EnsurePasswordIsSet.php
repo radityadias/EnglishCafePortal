@@ -10,14 +10,14 @@ class EnsurePasswordIsSet
 {
     public function handle(Request $request, Closure $next)
     {
-//        $user = Auth::user();
-//
-//        if ($user && !$user->hasSetPassword()) {
-//            Auth::logout();
-//
-//            return redirect()->route('login')
-//                ->withErrors(['email' => 'Akun Anda belum diaktifkan. Silakan cek email Anda.']);
-//        }
+        $user = Auth::user();
+
+        if ($user && !$user->hasSetPassword()) {
+            Auth::logout();
+
+            return redirect()->route('login')
+                ->withErrors(['email' => 'Akun Anda belum diaktifkan. Silakan cek email Anda.']);
+        }
 
         return $next($request);
     }

@@ -15,15 +15,15 @@ class UserObserver
      */
     public function created(User $user): void
     {
-//        if (!$user->hasSetPassword()) {
-//            SendEmailSetupPassword::dispatch($user);
-//        }
-//
-//        if ($this->isUserHasProfile($user)) {
-//            return;
-//        }
-//
-//        $this->processStoreProfile($user);
+        if (!$user->hasSetPassword()) {
+            SendEmailSetupPassword::dispatch($user);
+        }
+
+        if ($this->isUserHasProfile($user)) {
+            return;
+        }
+
+        $this->processStoreProfile($user);
     }
 
     /**
@@ -60,11 +60,11 @@ class UserObserver
 
     public function processStoreProfile(User $user): void
     {
-        if ($user->position == Position::Employee) {
-            $this->storeEmployeeProfile($user);
-        } else {
-            $this->storeInternshipProfile($user);
-        }
+       match ($user->position) {
+           Position::Employee => $this->storeEmployeeProfile($user),
+           Position::Internship => $this->storeInternshipProfile($user),
+           default => null,
+       };
     }
 
     public function storeEmployeeProfile(User $user): void
@@ -83,6 +83,6 @@ class UserObserver
 
     public function isUserHasProfile(User $user): bool
     {
-        return is_null($user->employeeProfile | $user->internshipProfile);
+        return $user->employeeProfile()->exists() || $user->internshipProfile()->exists();
     }
 }

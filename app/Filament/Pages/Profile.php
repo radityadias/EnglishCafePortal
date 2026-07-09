@@ -3,12 +3,14 @@
 namespace App\Filament\Pages;
 
 use App\Enums\Position;
+use App\Models\Branch;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -30,8 +32,8 @@ class Profile extends Page
 
     public function mount(): void
     {
-        $this->user = Auth::user()->load(
-            $this->isEmployee() ? 'employeeProfile' : 'internshipProfile'
+        $this->user = Auth::user()->fresh()->load(
+            $this->isEmployee() ? 'employeeProfile' : ['internshipProfile', 'internshipProfile.branch']
         );
     }
 
@@ -84,7 +86,7 @@ class Profile extends Page
                     ]),
 
                 // Employee-only section
-                Section::make('Informasi Bank')
+                Section::make('Informasi Kerja')
                     ->columns(3)
                     ->visible($this->isEmployee())
                     ->schema([
@@ -96,6 +98,15 @@ class Profile extends Page
                             ->default('-'),
                         TextEntry::make('employeeProfile.bank_account_name')
                             ->label('Nama Pemilik Rekening')
+                            ->default('-'),
+                        TextEntry::make('employeeProfile.work_time_start')
+                            ->label('Waktu Mulai Kerja')
+                            ->default('-'),
+                        TextEntry::make('employeeProfile.work_time_end')
+                            ->label('Waktu Selesai Kerja')
+                            ->default('-'),
+                        TextEntry::make('attendanceRecap.total_hours')
+                            ->label('Total Jam Kerja')
                             ->default('-'),
                     ]),
 
@@ -112,6 +123,12 @@ class Profile extends Page
                             ->label('Tanggal Selesai')
                             ->date('d MMMM Y')
                             ->placeholder('-'),
+                        TextEntry::make('attendanceRecap.total_hours')
+                            ->label('Total Jam Kerja')
+                            ->default('-'),
+                        TextEntry::make('internshipProfile.branch.name')
+                            ->label('Branch')
+                            ->default('-')
                     ]),
             ]);
     }
@@ -152,6 +169,9 @@ class Profile extends Page
                 return array_merge($base, [
                     'start_date' => $profile?->start_date,
                     'end_date'   => $profile?->end_date,
+                    'work_time_start' => $profile?->work_time_start,
+                    'work_time_end'   => $profile?->work_time_end,
+                    'branch_id' => $profile?->branch_id,
                 ]);
             })
             ->schema($this->getEditFormSchema())
@@ -179,6 +199,8 @@ class Profile extends Page
                             'bank_number'       => $data['bank_number'] ?? null,
                             'bank_account_name' => $data['bank_account_name'] ?? null,
                             'ktp_path'          => $data['ktp_path'] ?? null,
+                            'work_time_start' => $data['work_time_start'] ?? null,
+                            'work_time_end'   => $data['work_time_end'] ?? null,
                         ])
                     );
                 } else {
@@ -187,6 +209,7 @@ class Profile extends Page
                         array_merge($profileData, [
                             'start_date' => $data['start_date'] ?? null,
                             'end_date'   => $data['end_date'] ?? null,
+                            'branch_id'  => $data['branch_id'] ?? null,
                         ])
                     );
                 }
@@ -240,7 +263,8 @@ class Profile extends Page
         ];
 
         if ($this->isEmployee()) {
-            $shared[] = Section::make('Informasi Bank')
+            $shared[] =
+                Section::make('Informasi Kerja')
                 ->columns(2)
                 ->schema([
                     Select::make('bank_name')
@@ -267,6 +291,10 @@ class Profile extends Page
                         ->preventFilePathTampering(
                             allowFilePathUsing: fn (string $file): bool => str_starts_with($file, 'ktp/')
                         ),
+                    TimePicker::make('work_time_start')
+                        ->label('Waktu Mulai Kerja'),
+                    TimePicker::make('work_time_end')
+                        ->label('Waktu Selesai Kerja'),
                 ]);
         } else {
             $shared[] = Section::make('Informasi Magang')
@@ -277,6 +305,11 @@ class Profile extends Page
                     DatePicker::make('end_date')
                         ->label('Tanggal Selesai')
                         ->afterOrEqual('start_date'),
+                    Select::make('branch_id')
+                        ->label('Branch')
+                        ->options(Branch::all()->pluck('name', 'id'))
+                        ->preload()
+                        ->searchable()
                 ]);
         }
 

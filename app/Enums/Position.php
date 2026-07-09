@@ -9,6 +9,6 @@ enum Position : string
     case Onboarding = 'Onboarding';
     case Training = 'Training';
     case Nonactive = 'Nonaktif';
-    case Admin = 'Admin';
     case SuperAdmin = 'Super Admin';
+    case Admin = 'Admin';
 }
