@@ -2,14 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\EmployeeProfile;
+use App\Enums\Position;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -18,23 +13,43 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::factory()->create([
-            'name' => 'English Cafe Admin',
-            'email' => 'admin.englishcafe@gmail.com',
-            'password' => bcrypt('englishcafealwaysdifferent'),
-            'password_set_at' => now(),
-            'position' => 'Super Admin',
-        ]);
-
-        EmployeeProfile::firstOrCreate(
+        $users = [
             [
-                'user_id' => $user->id,
+                'name'            => 'English Cafe Super Admin',
+                'email'           => 'admin.englishcafe@gmail.com',
+                'password'        => bcrypt('englishcafealwaysdifferent'),
+                'password_set_at' => now(),
+                'position'        => Position::SuperAdmin->value,
             ],
             [
-                'work_time_start' => Carbon::createFromTime(8, 00, 00),
-                'branch_id' => 1
-            ]
-        );
+                'name'            => 'English Cafe HRD',
+                'email'           => 'hrd.englishcafe@gmail.com',
+                'password'        => bcrypt('hrdenglishcafe'),
+                'password_set_at' => now(),
+                'position'        => Position::Admin->value,
+            ],
+            [
+                'name'            => 'El',
+                'email'           => 'el@gmail.com',
+                'password'        => bcrypt('elenglishcafe'),
+                'password_set_at' => now(),
+                'position'        => Position::Employee->value,
+            ],
+            [
+                'name'            => 'Radit',
+                'email'           => 'radit@gmail.com',
+                'password'        => bcrypt('raditenglishcafe'),
+                'password_set_at' => now(),
+                'position'        => Position::Internship->value,
+            ],
+        ];
+
+        foreach ($users as $userData) {
+            User::firstOrCreate(
+                ['email' => $userData['email']],
+                $userData
+            );
+        }
     }
 
 }
