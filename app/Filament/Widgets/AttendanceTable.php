@@ -25,10 +25,12 @@ class AttendanceTable extends TableWidget
     {
         return $table
             ->poll('30s')
-            ->query(fn (): Builder => \App\Models\Attendance::query())
+            ->query(fn (): Builder => \App\Models\Attendance::query()->orderBy('updated_at', 'asc'))
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama'),
+                TextColumn::make('checkin_date')
+                    ->label('Tanggal'),
                 TextColumn::make('type')
                     ->label('Jenis'),
                 TextColumn::make('time')
@@ -50,4 +52,6 @@ class AttendanceTable extends TableWidget
                 ]),
             ]);
     }
+
+
 }
