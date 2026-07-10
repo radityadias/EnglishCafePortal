@@ -15,7 +15,7 @@ class EnsurePasswordIsSet
         if ($user && !$user->hasSetPassword()) {
             Auth::logout();
 
-            return redirect()->route('login')
+            return redirect('/login')
                 ->withErrors(['email' => 'Akun Anda belum diaktifkan. Silakan cek email Anda.']);
         }
 

@@ -150,7 +150,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
         $user = $this->getAuthUser();
 
         if (!$user) {
-            $this->sendNotification('error', __('notification.error_title'), __('notification.error_description'), ['name' => $user->name]);
+            $this->sendNotification('error', __('notification.error_title'), __('notification.error_description'));
             return;
         }
 
@@ -190,7 +190,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
         $this->refreshTable();
 
         if ($attendance->wasRecentlyCreated) {
-            $this->sendNotification('success', __('notification.success_title'), __('notification.success_description'));
+            $this->sendNotification('success', __('notification.success_title'), __('notification.success_description', ['name' => $user->name, '']));
         } else {
             $this->sendNotification('info', __('notification.existed_title'), __('notification.existed_description'));
         }
@@ -205,9 +205,9 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
         $this->refreshTable();
 
         if ($updated) {
-            $this->sendNotification('success', __('notification.success_title'), __('notification.success_description'));
+            $this->sendNotification('success', __('notification.success_title'), __('notification.success_description', ['name' => $user->name, 'checkin_time' => Carbon::now()->format('H:i')]));
         } else {
-            $this->sendNotification('info', __('notification.existed_title', ['name' => $user->name, 'time' => Carbon::now()]), __('notification.existed_description'));
+            $this->sendNotification('info', __('notification.existed_title'), __('notification.existed_description'));
         }
     }
 

@@ -81,8 +81,8 @@ class UserResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
                 ResendSetupLinkAction::make(),
+                EditAction::make(),
                 DeleteAction::make()
                     ->label('Hapus'),
             ])

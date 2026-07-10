@@ -17,6 +17,8 @@ class EmployeeProfile extends Model
         'bank_number',
         'bank_name',
         'bank_account_name',
+        'work_time_start',
+        'work_time_end',
         'cv_path',
         'ktp_path',
         'other_path',
@@ -33,6 +35,11 @@ class EmployeeProfile extends Model
     public function division() : BelongsTo
     {
         return $this->belongsTo(Division::class);
+    }
+
+    public function branch() : BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function workingTime() : BelongsTo

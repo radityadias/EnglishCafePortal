@@ -14,5 +14,8 @@ return [
     'invalid_description' => 'You have been detected outside of the branch. Please get closer.',
 
     'existed_title' => 'Attendance Already Existed',
-    'existed_description' => 'You already have an attendance at this time.',
-];
+    'existed_description' => 'You already have an attendance today.',
+
+    'branch_title' => 'Branch is not configured',
+    'branch_description' => 'Please configure your branch on profile page.',
+    ];
