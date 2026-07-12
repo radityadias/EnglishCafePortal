@@ -45,7 +45,7 @@
                         {{ now()->isoFormat('HH:mm:ss') }}
                     </span>
                     <span class="text-xs text-gray-400">
-                        {{ now()->isoFormat('D MMMM YYYY') }} • Cabang: {{ auth()->user()->employeeProfile?->branch?->branch_name ?? 'Belum Diatur' }}
+                        {{ now()->isoFormat('D MMMM YYYY') }} • Cabang: {{ auth()->user()->employeeProfile?->branch?->name ?? 'Belum Diatur' }}
                     </span>
                 </div>
             </div>

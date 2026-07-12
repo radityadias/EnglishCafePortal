@@ -48,14 +48,17 @@ class AttendanceRequestResource extends Resource
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('reason')
                     ->label('Alasan')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('date')
                     ->label('Tanggal')
                     ->date()
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()

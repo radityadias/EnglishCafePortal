@@ -26,6 +26,7 @@ class AttendanceTable extends TableWidget
         return $table
             ->poll('30s')
             ->query(fn (): Builder => \App\Models\Attendance::query()->orderBy('checkin_date', 'desc')->orderBy('updated_at', 'desc'))
+            ->heading('Presensi')
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama'),

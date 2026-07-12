@@ -42,7 +42,12 @@ class BranchResource extends Resource
             ->recordTitleAttribute('branch')
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('latitude')
+                    ->label('Latitude'),
+                TextColumn::make('longitude')
+                    ->label('Longitude'),
             ])
             ->filters([
                 //

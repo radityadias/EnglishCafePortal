@@ -42,7 +42,8 @@ class DivisionResource extends Resource
             ->recordTitleAttribute('division')
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //

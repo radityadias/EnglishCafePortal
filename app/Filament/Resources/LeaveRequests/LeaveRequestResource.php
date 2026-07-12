@@ -88,7 +88,7 @@ class LeaveRequestResource extends Resource
                     ->label ('Tanggal Selesai'),
                 TextColumn::make('status')
                     ->searchable(),
-                TextCoulmn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
                     ->badge()
                     ->color(fn (ConfirmationStatus $state) => match ($state) {
