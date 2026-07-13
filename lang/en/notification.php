@@ -4,7 +4,7 @@ return [
     'success_title' => 'Attendance Successful',
     'success_description' => 'Welcome :name, your attendance has been checked in at :checkin_time.',
 
-    'error_title' => 'Something went wrong',
+    'error_title' => 'Something Went Wrong',
     'error_description' => 'Something went wrong, please try again later and contact the administrator.',
 
     'expired_title' => 'Attendance Expired',
@@ -16,6 +16,9 @@ return [
     'existed_title' => 'Attendance Already Existed',
     'existed_description' => 'You already have an attendance today.',
 
-    'branch_title' => 'Branch is not configured',
+    'branch_title' => 'Branch is not Configured',
     'branch_description' => 'Please configure your branch on profile page.',
+
+    'work_time_title' => 'Work Time is not Configured',
+    'work_time_description' => 'Please configure your work time on profile page.',
     ];

@@ -18,4 +18,7 @@ return [
 
     'branch_title' => 'Cabang Belum Dikonfigurasi',
     'branch_description' => 'Silakan konfigurasi cabang Anda di halaman profil.',
+
+    'work_time_title' => 'Jam Kerja Belum Dikonfigurasi',
+    'work_time_description' => 'Silahkan konfigurasi jam kerja anda di halaman profile.'
 ];
