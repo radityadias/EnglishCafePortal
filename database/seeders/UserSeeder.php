@@ -16,32 +16,18 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name'            => 'English Cafe Super Admin',
-                'email'           => 'admin.englishcafe@gmail.com',
+                'email'           => 'officialenglishcafe@gmail.com',
                 'password'        => bcrypt('englishcafealwaysdifferent'),
                 'password_set_at' => now(),
                 'position'        => Position::SuperAdmin->value,
             ],
             [
-                'name'            => 'English Cafe HRD',
-                'email'           => 'hrd.englishcafe@gmail.com',
-                'password'        => bcrypt('hrdenglishcafe'),
-                'password_set_at' => now(),
-                'position'        => Position::Admin->value,
-            ],
-            [
-                'name'            => 'El',
-                'email'           => 'el@gmail.com',
-                'password'        => bcrypt('elenglishcafe'),
-                'password_set_at' => now(),
-                'position'        => Position::Employee->value,
-            ],
-            [
-                'name'            => 'Radit',
-                'email'           => 'radit@gmail.com',
-                'password'        => bcrypt('raditenglishcafe'),
+                'name'            => 'Muhammad Raditya Nur Aziz',
+                'email' => 'radityadias24@gmail.com',
+                'password'        => bcrypt('radityadias24'),
                 'password_set_at' => now(),
                 'position'        => Position::Internship->value,
-            ],
+            ]
         ];
 
         foreach ($users as $userData) {

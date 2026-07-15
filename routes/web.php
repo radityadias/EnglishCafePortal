@@ -1,16 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\PasswordSetupController;
+use App\Filament\Pages\Auth\SetupPassword;
 
 Route::middleware('guest')->group(function () {
-    Route::get('password/setup/{token}', [PasswordSetupController::class, 'showForm'])
+    Route::get('password/setup/{token}', SetupPassword::class)
         ->name('password.setup');
-
-    Route::post('password/setup', [PasswordSetupController::class, 'store'])
-        ->name('password.setup.store');
-});
-
-Route::get('/', function () {
-    return view('welcome');
 });

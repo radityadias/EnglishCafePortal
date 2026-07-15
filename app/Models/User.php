@@ -16,7 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'password_set_at','position'])]
+#[Fillable(['name', 'email', 'phone', 'password', 'password_set_at','position'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {

@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\BranchSeeder;
 use Database\Seeders\DivisionSeeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\InstanceSeeder;
 
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BranchSeeder::class,
             DivisionSeeder::class,
+            InstanceSeeder::class,
             UserSeeder::class,
         ]);
     }

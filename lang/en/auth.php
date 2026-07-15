@@ -17,4 +17,10 @@ return [
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
+    'password_success' => 'Berhasil!',
+    'password_description' => 'Password berhasil diatur. Silakan login.',
+
+    'invalid_title' => 'Invalid Link',
+    'invalid_description' => 'Invalid link or the link is expired. Please try again.',
+
 ];

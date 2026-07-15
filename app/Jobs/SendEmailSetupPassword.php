@@ -2,13 +2,14 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
 use App\Mail\PasswordSetupMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
-use App\Models\User;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 
@@ -43,5 +44,7 @@ class SendEmailSetupPassword implements ShouldQueue
 
         Mail::to($this->user->email)
             ->send(new PasswordSetupMail($this->user, $setupUrl));
+
+        Log::info('Email Sent with: ', [$this->user, $setupUrl] );
     }
 }

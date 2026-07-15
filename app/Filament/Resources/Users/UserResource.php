@@ -9,7 +9,7 @@ use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use ResendSetupLinkAction;
+use App\Filament\Resources\Users\Actions\SendSetupLinkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -69,20 +69,23 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('email')
                     ->label('Alamat Email')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('position')
                     ->label('Posisi')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
+                SendSetupLinkAction::make(),
                 EditAction::make(),
-                ResendSetupLinkAction::make(),
                 DeleteAction::make()
                     ->label('Hapus'),
             ])

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('birth_place')->nullable();
             $table->date('birth_date')->nullable();
             $table->text('address')->nullable();
-            $table->string('instance')->nullable();
             $table->string('school')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

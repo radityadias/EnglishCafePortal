@@ -21,13 +21,16 @@ class EmployeesTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('email')
                     ->label('Email')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('employeeProfile.phone')
                     ->label('No. Telp')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
             ])
             ->filters([
