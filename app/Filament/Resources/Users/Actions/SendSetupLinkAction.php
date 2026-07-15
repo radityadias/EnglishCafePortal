@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Filament\Resources\Users\Actions;
+
 use App\Jobs\SendEmailSetupPassword;
 use App\Models\User;
 use Filament\Actions\Action;
