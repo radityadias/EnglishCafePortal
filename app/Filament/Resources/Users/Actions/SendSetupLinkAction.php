@@ -4,7 +4,7 @@ use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 
-class ResendSetupLinkAction extends Action
+class SendSetupLinkAction extends Action
 {
     public static function getDefaultName(): ?string
     {

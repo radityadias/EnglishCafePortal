@@ -9,7 +9,7 @@ use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use ResendSetupLinkAction;
+use SendSetupLinkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -84,7 +84,7 @@ class UserResource extends Resource
                 //
             ])
             ->recordActions([
-                ResendSetupLinkAction::make(),
+                SendSetupLinkAction::make(),
                 EditAction::make(),
                 DeleteAction::make()
                     ->label('Hapus'),
