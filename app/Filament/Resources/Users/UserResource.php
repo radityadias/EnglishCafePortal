@@ -30,6 +30,13 @@ class UserResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'user';
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['passwrod_set_at'] = now();
+
+        return $data;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
