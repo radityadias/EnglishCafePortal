@@ -7,13 +7,6 @@ use App\Filament\Actions\Attendance\LeaveRequestAction;
 use App\Services\AttendanceScannerService;
 use Filament\Widgets\Widget;
 use Filament\Actions\Action;
-<<<<<<< HEAD
-use Filament\Forms\Components\Select;
-use App\Enums\LeaveType;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Textarea;
-=======
->>>>>>> f08a19952f411a0d5c3db530472393d00d4ed765
 use Filament\Forms\Contracts\HasForms;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -45,67 +38,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
 
     public function leaveRequestAction(): Action
     {
-<<<<<<< HEAD
-        return Action::make('leaveRequest')
-            ->label('Ajukan Izin')
-            ->icon('heroicon-o-document-text')
-            ->color('warning')
-            ->modalHeading('Ajukan Izin / Cuti')
-            ->modalDescription('Isi form berikut untuk mengajukan izin atau cuti.')
-            ->modalWidth('lg')
-            ->schema([
-                Select::make('type')
-                    ->label('Jenis')
-                    ->options([
-                        LeaveType::Sick->value => 'Sakit',
-                        LeaveType::Leave->value => 'Cuti',
-                        LeaveType::Personal->value => 'Izin Pribadi',
-                        LeaveType::Other->value => 'Lainnya',
-                    ])
-                    ->required(),
-
-                DatePicker::make('start_date')
-                    ->label('Tanggal Mulai')
-                    ->required()
-                    ->minDate(today()),
-
-                DatePicker::make('end_date')
-                    ->label('Tanggal Selesai')
-                    ->required()
-                    ->minDate(today())
-                    ->afterOrEqual('start_date'),
-
-                Textarea::make('reason')
-                    ->label('Alasan')
-                    ->required()
-                    ->rows(3)
-                    ->maxLength(500),
-                FileUpload::make('image_path')
-                    ->label('Bukti Foto')
-                    ->image()
-                    ->required()
-                    ->directory('absen')
-                    ->disk('s3')
-                    ->preventFilePathTampering(
-                        allowFilePathUsing: fn(string $file): bool => str_starts_with($file, 'absen/')
-                    )
-                ,
-            ])
-            ->action(function (array $data): void {
-                LeaveRequest::create([
-                    'user_id' => Auth::id(),
-                    'type' => $data['type'],
-                    'start_date' => $data['start_date'],
-                    'end_date' => $data['end_date'],
-                    'reason' => $data['reason'],
-                    'status' => 'pending',
-                    'image' => $data['image'],
-                ]);
-            })
-            ->disabled(fn(): bool => $this->isLeaveRequestExist($this->getAuthUser()));
-=======
         return LeaveRequestAction::make();
->>>>>>> f08a19952f411a0d5c3db530472393d00d4ed765
     }
 
     public function attendanceRequestAction(): Action
