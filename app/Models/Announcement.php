@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Announcement extends Model
 {
     protected $fillable = [
-        'created_by',
         'title',
         'content',
         'is_active',
@@ -25,11 +24,6 @@ class Announcement extends Model
             'starts_at'  => 'datetime',
             'ends_at'    => 'datetime',
         ];
-    }
-
-    public function creator(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function scopeActive(Builder $query): void

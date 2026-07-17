@@ -102,8 +102,6 @@ class AnnouncementResource extends Resource
                     ->label('Selesai')
                     ->dateTime('d M Y, H:i')
                     ->placeholder('-'),
-                TextColumn::make('creator.name')
-                    ->label('Dibuat Oleh'),
             ])
             ->recordActions([
                 EditAction::make(),
@@ -121,12 +119,5 @@ class AnnouncementResource extends Resource
         return [
             'index' => ManageAnnouncements::route('/'),
         ];
-    }
-
-    // Auto-fill created_by on create
-    public static function mutateFormDataBeforeCreate(array $data): array
-    {
-        $data['created_by'] = Auth::id();
-        return $data;
     }
 }
