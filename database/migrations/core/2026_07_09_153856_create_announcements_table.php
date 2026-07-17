@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('announcements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->string('title');
             $table->text('content');
             $table->boolean('is_active')->default(true);
