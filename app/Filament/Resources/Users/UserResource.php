@@ -58,7 +58,8 @@ class UserResource extends Resource
                 Select::make('roles ')
                     ->label('Role')
                     ->relationship('roles', 'name')
-                    ->preload()
+        	    ->multiple(1)
+		    ->preload()
             ]);
     }
 
