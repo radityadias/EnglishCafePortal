@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name'            => 'Muhammad Raditya Nur Aziz',
-                'email' => 'radityadias24@gmail.com',
+                'email'           => 'radityadias24@gmail.com',
                 'password'        => bcrypt('radityadias24'),
                 'password_set_at' => now(),
                 'position'        => Position::Internship->value,
