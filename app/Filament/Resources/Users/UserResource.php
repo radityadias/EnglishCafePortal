@@ -42,7 +42,8 @@ class UserResource extends Resource
                     ->email()
                     ->required(),
                 TextInput::make('phone')
-                    ->label('Nomor Telepon'),
+                    ->label('Nomor Telepon')
+                    ->required(),
                 Select::make('position')
                     ->label('Posisi')
                     ->required()
