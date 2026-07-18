@@ -7,6 +7,7 @@ use App\Jobs\SendEmailSetupPassword;
 use App\Models\EmployeeProfile;
 use App\Models\InternshipProfile;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserObserver
 {
@@ -17,6 +18,8 @@ class UserObserver
     {
         if (!$user->hasSetPassword()) {
             SendEmailSetupPassword::dispatch($user);
+
+            $this->updateTemporaryPassword($user);
         }
 
         if ($this->isUserHasProfile($user)) {
@@ -84,5 +87,12 @@ class UserObserver
     public function isUserHasProfile(User $user): bool
     {
         return $user->employeeProfile()->exists() || $user->internshipProfile()->exists();
+    }
+
+    public function updateTemporaryPassword(User $user): void
+    {
+        $user->update([
+            'password' => Hash::make('phone')
+        ]);
     }
 }

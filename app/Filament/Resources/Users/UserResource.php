@@ -41,14 +41,9 @@ class UserResource extends Resource
                     ->label('Alamat Email')
                     ->email()
                     ->required(),
-                TextInput::make('password')
-                    ->label('Kata Sandi')
-                    ->password()
-                    ->required()
-                    ->dehydrateStateUsing(fn ($state) => filled($state) ? bcrypt($state) : null)
-                    ->dehydrated(fn ($state) => filled($state)),
                 TextInput::make('phone')
-                    ->label('Nomor Telepon'),
+                    ->label('Nomor Telepon')
+                    ->required(),
                 Select::make('position')
                     ->label('Posisi')
                     ->required()
@@ -64,8 +59,8 @@ class UserResource extends Resource
                 Select::make('roles ')
                     ->label('Role')
                     ->relationship('roles', 'name')
-        	    ->multiple(1)
-		    ->preload()
+        	        ->multiple(1)
+		            ->preload()
             ]);
     }
 
