@@ -20,6 +20,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use BackedEnum;
@@ -262,6 +263,12 @@ class Profile extends Page
                     'phone' => $data['phone'],
                 ]);
 
+                if (!empty($data['new_password'])) {
+                    $user->update([
+                        'password' => Hash::make($data['new_password']),
+                    ]);
+                }
+
                 $profileData = [
                     'nickname' => $data['nickname'],
                     'birth_place' => $data['birth_place'],
@@ -359,6 +366,28 @@ class Profile extends Page
                         ->preventFilePathTampering(
                             allowFilePathUsing: fn(string $file): bool => str_starts_with($file, 'ktp/')
                         ),
+                ]),
+
+            Section::make('Keamanan')
+                ->columns(2)
+                ->schema([
+                    TextInput::make('current_password')
+                        ->label('Password Saat Ini')
+                        ->password()
+                        ->revealable()
+                        ->requiredWith('new_password')
+                        ->currentPassword(),
+                    TextInput::make('new_password')
+                        ->label('Password Baru')
+                        ->password()
+                        ->revealable()
+                        ->requiredWith('current_password')
+                        ->confirmed(),
+                    TextInput::make('new_password_confirmation')
+                        ->label('Konfirmasi Password Baru')
+                        ->password()
+                        ->revealable()
+                        ->requiredWith('new_password'),
                 ])
         ];
 

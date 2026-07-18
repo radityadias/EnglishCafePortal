@@ -48,12 +48,6 @@ class UserResource extends Resource
                     ->label('Alamat Email')
                     ->email()
                     ->required(),
-                TextInput::make('password')
-                    ->label('Kata Sandi')
-                    ->password()
-                    ->required()
-                    ->dehydrateStateUsing(fn ($state) => filled($state) ? bcrypt($state) : null)
-                    ->dehydrated(fn ($state) => filled($state)),
                 TextInput::make('phone')
                     ->label('Nomor Telepon'),
                 Select::make('position')
