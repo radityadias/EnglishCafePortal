@@ -53,6 +53,7 @@ class AttendanceTable extends TableWidget
                         AttendanceStatus::Leave => 'info',
                     }),
             ])
+            ->deferLoading()
             ->toolbarActions([
                 BulkActionGroup::make([
                     //
