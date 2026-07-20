@@ -8,6 +8,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 
 class AttendanceTable extends TableWidget
@@ -25,7 +26,10 @@ class AttendanceTable extends TableWidget
     {
         return $table
             ->poll('30s')
-            ->query(fn (): Builder => \App\Models\Attendance::query()->orderBy('checkin_date', 'desc')->orderBy('updated_at', 'desc'))
+            ->query(fn (): Builder => \App\Models\Attendance::query()
+                ->where('attendances.user_id', Auth::id())
+                ->orderBy('checkin_date', 'desc')
+                ->orderBy('updated_at', 'desc'))
             ->heading('Presensi')
             ->columns([
                 TextColumn::make('user.name')

@@ -147,9 +147,9 @@ class AttendanceScannerService
     private function getAuthUser(): ?User
     {
         return Auth::user()?->load([
-		'employeeProfile.branch',
-		'internshipProfile.branch'
-	]);
+            'employeeProfile.branch',
+            'internshipProfile.branch',
+        ]);
     }
 
     private function getUserBranchLatitude($user): ?float
