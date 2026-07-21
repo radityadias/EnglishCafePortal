@@ -22,123 +22,123 @@ class BranchSeeder extends Seeder
             ],
             [
                 'name' => 'English Cafe UNS',
-                'latitude' => -7.54861616,
-                'longitude' => 110.8588231
+                'latitude' => -7.5486290,
+                'longitude' => 110.8588229
             ],
             [
                 'name' => 'English Cafe USM',
-                'latitude' => -6.9777491,
-                'longitude' => 110.4492854
+                'latitude' => -6.9777567,
+                'longitude' => 110.4492831
             ],
             [
                 'name' => 'English Cafe UNDIP',
-                'latitude' => -7.0644534,
-                'longitude' => 110.4282243
+                'latitude' => -7.0644674,
+                'longitude' => 110.4282272
             ],
             [
                 'name' => 'English Cafe UMY',
-                'latitude' => -7.8144675,
-                'longitude' => 110.3234647
+                'latitude' => -7.8144847,
+                'longitude' => 110.3234636
             ],
             [
                 'name' => 'English Cafe Alive Fusion Dining',
-                'latitude' => -7.7963291,
-                'longitude' => 110.3924619,
+                'latitude' => -7.7964360,
+                'longitude' => 110.3924707
             ],
             [
                 'name' => 'English Cafe Depok UI',
-                'latitude' => -6.3755413,
-                'longitude' => 106.8284594
+                'latitude' => -6.3755547,
+                'longitude' => 106.8284575
             ],
             [
                 'name' => 'English Cafe UB',
-                'latitude' => -7.9434482,
-                'longitude' => 112.6182829
+                'latitude' => -7.9434821,
+                'longitude' => 112.6182900
             ],
             [
                 'name' => 'English Cafe UGM',
-                'latitude' => -7.7619047,
-                'longitude' => 110.3753233
+                'latitude' => -7.7619182,
+                'longitude' => 110.3753239
             ],
             [
                 'name' => 'English Cafe Malang',
-                'latitude' => -7.9268660,
-                'longitude' => 112.6264369
+                'latitude' => -7.9268753,
+                'longitude' => 112.6264359
             ],
             [
                 'name' => 'English Cafe UII',
-                'latitude' => -7.6933495,
-                'longitude' => 110.4132909
+                'latitude' => -7.6933700,
+                'longitude' => 110.4132893
             ],
             [
                 'name' => 'English Cafe UIN Malang',
-                'latitude' => -7.9525785,
-                'longitude' => 112.6032842
+                'latitude' => -7.9525763,
+                'longitude' => 112.6032872
             ],
             [
                 'name' => 'English Cafe ITB',
-                'latitude' => -6.8946121,
-                'longitude' => 107.6148980
+                'latitude' => -6.8946351,
+                'longitude' => 107.6149021
             ],
             [
                 'name' => 'English Cafe Telkom',
-                'latitude' => -6.9722746,
-                'longitude' => 107.6513857
+                'latitude' => -6.9722840,
+                'longitude' => 107.6513900
             ],
             [
                 'name' => 'English Cafe UPN Jogja',
-                'latitude' => -7.7754535,
-                'longitude' => 110.4118225
+                'latitude' => -7.7754542,
+                'longitude' => 110.4118218
             ],
             [
                 'name' => 'English Cafe UNPAD',
-                'latitude' => -6.9339701,
-                'longitude' => 107.7735981
+                'latitude' => -6.9339717,
+                'longitude' => 107.7735954
             ],
             [
                 'name' => 'English Cafe UM',
-                'latitude' => -7.9582441,
-                'longitude' => 112.6345144
+                'latitude' => -7.9582415,
+                'longitude' => 112.6345142
             ],
             [
                 'name' => 'English Cafe Nologaten',
-                'latitude' => -7.7785577,
-                'longitude' => 110.3997925
+                'latitude' => -7.7785552,
+                'longitude' => 110.3997929
             ],
             [
                 'name' => 'English Cafe UMS',
-                'latitude' => -7.5532153,
-                'longitude' => 110.7625264
+                'latitude' => -7.55321850,
+                'longitude' => 110.7625290
             ],
             [
                 'name' => 'English Cafe Udinus',
-                'latitude' => -6.9823686,
-                'longitude' => 110.4177324
+                'latitude' => -6.9824639,
+                'longitude' => 110.4175184
             ],
             [
                 'name' => 'English Cafe Tembalang',
-                'latitude' => -7.0634042,
-                'longitude' => 110.4368004
+                'latitude' => -7.0634018,
+                'longitude' => 110.4368007
             ],
             [
                 'name' => 'English Cafe UMM',
-                'latitude' => -7.9243113,
-                'longitude' => 112.5845003
+                'latitude' => -7.9243125,
+                'longitude' => 112.5845012
             ],
             [
                 'name' => 'English Cafe Indraloka',
-                'latitude' => -7.7796018,
-                'longitude' => 110.3757923
+                'latitude' => -7.7796011,
+                'longitude' => 110.3757941
             ],
             [
                 'name' => 'English Cafe Bandung',
-                'latitude' => -6.9264918,
-                'longitude' => 107.6240969
+                'latitude' => -6.9264669,
+                'longitude' => 107.6240910
             ],
             [
                 'name' => 'English Cafe Padang',
-                'latitude' => -0.8818473,
-                'longitude' => 100.3614271
+                'latitude' => -0.8818464,
+                'longitude' => 100.3614269
             ],
 
         ]);
