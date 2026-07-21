@@ -85,7 +85,6 @@
                     {{ $this->leaveRequestAction }}
                     {{ $this->attendanceRequestAction }}
                 </div>
-
             </div>
         </div>
     </x-filament::section>

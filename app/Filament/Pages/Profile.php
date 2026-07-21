@@ -104,8 +104,6 @@ class Profile extends Page
                             ->label('Nama Panggilan')
                             ->default('-')
                             ->visible($this->isEmployee()),
-                        TextEntry::make('employeeProfile.phone_backup')
-                            ->label('Nomor Telepon Cadangan'),
                         TextEntry::make('internshipProfile.nickname')
                             ->label('Nama Panggilan')
                             ->default('-')
@@ -127,6 +125,9 @@ class Profile extends Page
                     ->columns(3)
                     ->visible($this->isEmployee())
                     ->schema([
+                        TextEntry::make('employeeProfile.phone_backup')
+                            ->label('Nomor Telepon Cadangan')
+                            ->default('-'),
                         TextEntry::make('employeeProfile.bank_name')
                             ->label('Nama Bank')
                             ->default('-'),
@@ -158,15 +159,16 @@ class Profile extends Page
                     ->columns(3)
                     ->visible(!$this->isEmployee())
                     ->schema([
-                        TextEntry::make('employeeProfile.school')
-                            ->label('Asal Sekolah'),
+                        TextEntry::make('internshipProfile.school')
+                            ->label('Asal Sekolah')
+                            ->default('-'),
                         TextEntry::make('internshipProfile.start_date')
                             ->label('Tanggal Mulai')
-                            ->date('d MMMM Y')
+                            ->date('d F Y')
                             ->placeholder('-'),
                         TextEntry::make('internshipProfile.end_date')
                             ->label('Tanggal Selesai')
-                            ->date('d MMMM Y')
+                            ->date('d F Y')
                             ->placeholder('-'),
                         TextEntry::make('attendanceRecap.total_hours')
                             ->label('Total Jam Kerja')
@@ -231,6 +233,7 @@ class Profile extends Page
                     'birth_place' => $profile?->birth_place,
                     'birth_date' => $profile?->birth_date,
                     'address' => $profile?->address,
+                    'school' => $profile?->school,
                     'cv_path' => $profile?->cv_path,
                     'branch_id' => $profile?->branch_id,
                     'division_id' => $profile?->division_id,
@@ -298,6 +301,7 @@ class Profile extends Page
                         array_merge($profileData, [
                             'start_date' => $data['start_date'] ?? null,
                             'end_date' => $data['end_date'] ?? null,
+                            'school' => $data['school'] ?? null,
                             'instance_id' => $data['instance_id'] ?? null,
                         ])
                     );

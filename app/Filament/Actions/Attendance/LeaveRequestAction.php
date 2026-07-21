@@ -14,7 +14,7 @@ class LeaveRequestAction extends Action
 {
     public static function getDefaultName() : string
     {
-        return 'leave_request';
+        return 'leaveRequestAction';
     }
 
     protected function setUp(): void
