@@ -14,7 +14,7 @@ class AttendanceRequestAction extends Action
 {
     public static function getDefaultName(): ?string
     {
-        return 'attendance_request';
+        return 'attendanceReqeustAction';
     }
 
     protected function setUp(): void
@@ -53,10 +53,10 @@ class AttendanceRequestAction extends Action
                     'status' => ConfirmationStatus::Pending->value
                 ]);
             })
-            ->disabled(fn (): bool => $this->isAlreadyCheckedout());
+            ->disabled(fn (): bool => $this->isAlreadyCheckedOut());
     }
 
-    private function isAlreadyCheckedout(): bool
+    private function isAlreadyCheckedOut(): bool
     {
         return Attendance::where('user_id', Auth::id())
             ->whereDate('checkin_date', today())

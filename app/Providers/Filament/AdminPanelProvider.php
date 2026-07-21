@@ -25,6 +25,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->brandName('English Cafe')
             ->id('admin')
             ->path('')
             ->viteTheme('resources/css/filament/admin/theme.css')
