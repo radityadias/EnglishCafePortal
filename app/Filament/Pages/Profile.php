@@ -126,7 +126,7 @@ class Profile extends Page
                     ->visible($this->isEmployee())
                     ->schema([
                         TextEntry::make('employeeProfile.phone_backup')
-                            ->label('Nomor Telepon Cadangan'),
+                            ->label('Nomor Telepon Cadangan')
                             ->default('-'),
                         TextEntry::make('employeeProfile.bank_name')
                             ->label('Nama Bank')
