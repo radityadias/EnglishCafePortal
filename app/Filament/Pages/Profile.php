@@ -104,8 +104,6 @@ class Profile extends Page
                             ->label('Nama Panggilan')
                             ->default('-')
                             ->visible($this->isEmployee()),
-                        TextEntry::make('employeeProfile.phone_backup')
-                            ->label('Nomor Telepon Cadangan'),
                         TextEntry::make('internshipProfile.nickname')
                             ->label('Nama Panggilan')
                             ->default('-')
@@ -127,6 +125,9 @@ class Profile extends Page
                     ->columns(3)
                     ->visible($this->isEmployee())
                     ->schema([
+                        TextEntry::make('employeeProfile.phone_backup')
+                            ->label('Nomor Telepon Cadangan'),
+                            ->default('-'),
                         TextEntry::make('employeeProfile.bank_name')
                             ->label('Nama Bank')
                             ->default('-'),
@@ -399,9 +400,6 @@ class Profile extends Page
                 Section::make('Informasi Kerja')
                     ->columns(2)
                     ->schema([
-                        TextInput::make('phone_backup')
-                            ->label('Nomor Telepon Cadangan')
-                            ->default('-'),
                         Select::make('bank_name')
                             ->label('Nama Bank')
                             ->options([
