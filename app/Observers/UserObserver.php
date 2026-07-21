@@ -91,8 +91,8 @@ class UserObserver
 
     public function updateTemporaryPassword(User $user): void
     {
-        $user->update([
-            'password' => Hash::make('phone')
+        $user->updateQuietly([
+            'password' => Hash::make($user->phone)
         ]);
     }
 }
