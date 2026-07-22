@@ -14,7 +14,7 @@ class AttendanceRequestAction extends Action
 {
     public static function getDefaultName(): ?string
     {
-        return 'attendanceReqeustAction';
+        return 'attendanceRequestAction';
     }
 
     protected function setUp(): void

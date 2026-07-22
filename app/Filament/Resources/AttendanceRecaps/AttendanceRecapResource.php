@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AttendanceRecaps;
 
 use App\Filament\Resources\AttendanceRecaps\Pages\ManageAttendanceRecaps;
 use App\Models\AttendanceRecap;
+use App\Models\Branch;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -11,10 +12,14 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\QueryBuilder\Constraints\NumberConstraint;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\QueryBuilder;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use UnitEnum;
 
@@ -55,22 +60,41 @@ class AttendanceRecapResource extends Resource
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('total_hours')
                     ->label('Total Jam')
-                    ->numeric()
+                    ->default('0')
                     ->sortable(),
                 TextColumn::make('sick_leaves')
                     ->label('Izin Sakit')
-                    ->numeric()
+                    ->default('0')
                     ->sortable(),
                 TextColumn::make('absent_leaves')
                     ->label('Tanpa Keterangan')
-                    ->numeric()
+                    ->default('0')
                     ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('user_id')
+                    ->label('Cabang')
+                    ->options(Branch::all()->pluck('name', 'id'))
+                    ->multiple()
+                    ->searchable(),
+                QueryBuilder::make()
+                    ->constraints([
+                        NumberConstraint::make('total_hours')
+                            ->label('Total Jam')
+                            ->integer(),
+
+                        NumberConstraint::make('sick_leaves')
+                            ->label('Izin Sakit')
+                            ->integer(),
+
+                        NumberConstraint::make('absent_leaves')
+                            ->label('Tanpa Keterangan')
+                            ->integer(),
+                    ])
             ])
             ->recordActions([
                 EditAction::make(),
