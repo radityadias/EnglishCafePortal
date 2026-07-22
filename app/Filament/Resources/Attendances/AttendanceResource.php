@@ -73,11 +73,9 @@ class AttendanceResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Selectfilter::status('user_id')
+                Selectfilter::Status('status')
                     ->Status('Status')
                     ->options(AttendanceStatus::class)
-
-
             ])
             ->recordActions([
                 EditAction::make(),

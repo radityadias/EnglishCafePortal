@@ -11,6 +11,7 @@ use Filament\Actions\ViewAction;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use app\Enums\EmployeeStatus;
 use Illuminate\Database\Eloquent\Builder;
 class EmployeesTable
 {
@@ -34,7 +35,16 @@ class EmployeesTable
 
             ])
             ->filters([
-                //
+                SelectFilter::make('user_id')
+                    ->label('Cabang')
+                    ->options(Branch::all()->pluck('name', 'id'))
+                    ->multiple()
+                    ->searchable(),
+                SelectFilter::make('user_id')
+                    ->label('Divisi')
+                    ->options(Division::all()->pluck('name', 'id'))
+                    ->multiple()
+                    ->searchable(),
             ])
             ->recordActions([
                 Action::make('whatsapp')

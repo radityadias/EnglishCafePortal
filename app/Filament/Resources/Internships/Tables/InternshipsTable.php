@@ -28,7 +28,16 @@ class InternshipsTable
                     ->searchable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('user_id')
+                    ->label('Cabang')
+                    ->options(Branch::all()->pluck('name', 'id'))
+                    ->multiple()
+                    ->searchable(),
+                SelectFilter::make('user_id')
+                    ->label('Divisi')
+                    ->options(Division::all()->pluck('name', 'id'))
+                    ->multiple()
+                    ->searchable(),
             ])
             ->recordActions([
                 ViewAction::make(),
