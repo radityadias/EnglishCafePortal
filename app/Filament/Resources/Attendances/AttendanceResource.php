@@ -12,6 +12,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use app\Enums\AttendanceStatus;
 use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -72,7 +73,11 @@ class AttendanceResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                Selectfilter::status('user_id')
+                    ->Status('Status')
+                    ->options(AttendanceStatus::class)
+
+
             ])
             ->recordActions([
                 EditAction::make(),
