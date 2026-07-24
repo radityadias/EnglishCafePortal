@@ -15,6 +15,8 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class BranchResource extends Resource
@@ -25,8 +27,12 @@ class BranchResource extends Resource
 
     protected static string | UnitEnum | null $navigationGroup = 'Master Data';
 
-    protected static ?string $recordTitleAttribute = 'branch';
+    protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->name;
+    }
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -39,7 +45,7 @@ class BranchResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('branch')
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
                     ->searchable()

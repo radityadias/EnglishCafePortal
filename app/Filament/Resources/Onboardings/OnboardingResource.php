@@ -17,6 +17,8 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class OnboardingResource extends Resource
@@ -27,10 +29,13 @@ class OnboardingResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Rekrutmen';
 
+    protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $pluralModelLabel = 'Onboarding';
 
-    protected static ?string $recordTitleAttribute = 'onboarding';
-
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->name;
+    }
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -55,8 +60,8 @@ class OnboardingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('onboarding')
             ->modifyQueryUsing(fn(Builder $query) => $query->where('position', 'Onboarding'))
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama')

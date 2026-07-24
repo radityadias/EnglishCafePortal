@@ -21,6 +21,8 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\QueryBuilder;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class AttendanceRecapResource extends Resource
@@ -33,7 +35,13 @@ class AttendanceRecapResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Rekap Kehadiran';
 
-    protected static ?string $recordTitleAttribute = 'attendance_recap';
+    protected static ?string $recordTitleAttribute = 'user.name';
+
+
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->user->name;
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -56,7 +64,7 @@ class AttendanceRecapResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('attendance_recap')
+            ->recordTitleAttribute('user.name')
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')

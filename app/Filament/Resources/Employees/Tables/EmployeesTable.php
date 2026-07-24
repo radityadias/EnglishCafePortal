@@ -18,6 +18,7 @@ class EmployeesTable
     {
         return $table
             ->modifyQueryUsing(fn (Builder $query) => $query->where('position', 'Karyawan'))
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama')

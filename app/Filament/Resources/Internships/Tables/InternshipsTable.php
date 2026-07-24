@@ -15,6 +15,7 @@ class InternshipsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('name')
             ->modifyQueryUsing(fn (Builder $query) => $query->where('position', 'Internship'))
             ->columns([
                 TextColumn::make('name')

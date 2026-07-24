@@ -15,6 +15,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class EmployeeResource extends Resource
@@ -25,10 +27,14 @@ class EmployeeResource extends Resource
 
     protected static string | UnitEnum | null $navigationGroup = 'Biodata';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $pluralModelLabel = 'Karyawan';
 
-    protected static ?string $recordTitleAttribute = 'employee';
-
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->name;
+    }
     public static function getModelLabel() : string {
         return 'karyawan';
     }

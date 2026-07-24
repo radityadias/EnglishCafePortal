@@ -23,7 +23,9 @@ use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class LeaveRequestResource extends Resource
@@ -36,8 +38,10 @@ class LeaveRequestResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Permintaan Libur';
 
-    protected static ?string $recordTitleAttribute = 'leave_request';
-
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->user->name;
+    }
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -89,7 +93,7 @@ class LeaveRequestResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('leave_request')
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('user.name')
                     ->searchable()

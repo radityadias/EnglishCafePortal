@@ -19,6 +19,8 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class UserResource extends Resource
@@ -28,8 +30,13 @@ class UserResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::User;
 
     protected static string | UnitEnum | null $navigationGroup = 'Keamanan';
-
-    protected static ?string $recordTitleAttribute = 'user';
+    protected static ?string $recordTitleAttribute = 'name';
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Email' => $record->email,
+        ];
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -58,10 +65,10 @@ class UserResource extends Resource
                         Position::SuperAdmin->value => 'Super Admin',
                     ])
                     ->default('Nonaktif'),
-                Select::make('roles ')
+                Select::make('roles')
                     ->label('Role')
                     ->relationship('roles', 'name')
-        	        ->multiple(1)
+        	        ->multiple()
 		            ->preload()
             ]);
     }
@@ -69,7 +76,7 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('user')
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama')

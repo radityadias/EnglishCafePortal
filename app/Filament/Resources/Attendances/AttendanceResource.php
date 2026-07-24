@@ -19,6 +19,8 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class AttendanceResource extends Resource
@@ -31,8 +33,12 @@ class AttendanceResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Presensi';
 
-    protected static ?string $recordTitleAttribute = 'attendance';
+    protected static ?string $recordTitleAttribute = 'user.name';
 
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->user->name;
+    }
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -51,7 +57,7 @@ class AttendanceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('attendance')
+            ->recordTitleAttribute('user.name')
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')
