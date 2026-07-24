@@ -88,12 +88,10 @@ class AttendanceRequestResource extends Resource
                     ->sortable(),
                 SelectColumn::make('status')
                     ->label('Status')
-                    ->badge()
-                    ->color(fn (ConfirmationStatus $state) => match ($state) {
-                        ConfirmationStatus::Pending => 'warning',
-                        ConfirmationStatus::Approved => 'success',
-                        ConfirmationStatus::Rejected => 'danger',
-                    }),
+                    ->options([
+                        ConfirmationStatus::Approved->value => 'Setujui',
+                        ConfirmationStatus::Rejected->value => 'Tolak',
+                    ]),
                 TextColumn::make('image_path')
                     ->label('Bukti Foto')
                     ->icon(Heroicon::Photo)
