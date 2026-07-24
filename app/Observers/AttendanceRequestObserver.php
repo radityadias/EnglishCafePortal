@@ -74,13 +74,26 @@ class AttendanceRequestObserver
             ->diffInMinutes(Carbon::parse($attendanceRequest->requested_time));
     }
 
+    private function checkAttendanceStatus(User $user, $time)
+    {
+        $workTimeStart = $user->employeeProfile?->work_time_start ?? $user->internshipProfile?->work_time_start;
+
+        if (!$workTimeStart) {
+            return AttendanceStatus::Attend;
+        }
+
+        return $time->gt(Carbon::parse($workTimeStart))
+            ? AttendanceStatus::Late
+            : AttendanceStatus::Attend;
+    }
+
     private function createAttendance(AttendanceRequest $attendanceRequest, User $user): void
     {
         Attendance::create([
             'user_id'      => $user->id,
             'checkin_date' => $attendanceRequest->date,
             'checkin_time' => $attendanceRequest->requested_time,
-            'status'       => AttendanceStatus::Attend,
+            'status'       => $this->checkAttendanceStatus($user, $attendanceRequest->requested_time),
         ]);
     }
 
