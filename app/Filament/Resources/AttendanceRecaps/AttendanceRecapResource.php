@@ -27,7 +27,7 @@ class AttendanceRecapResource extends Resource
 {
     protected static ?string $model = AttendanceRecap::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::RectangleGroup;
 
     protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
 

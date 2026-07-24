@@ -25,7 +25,7 @@ class AttendanceResource extends Resource
 {
     protected static ?string $model = Attendance::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::QueueList;
 
     protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
 

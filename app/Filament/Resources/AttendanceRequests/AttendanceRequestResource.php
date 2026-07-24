@@ -30,7 +30,7 @@ class AttendanceRequestResource extends Resource
 {
     protected static ?string $model = AttendanceRequest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocumentCheck;
 
     protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
 
