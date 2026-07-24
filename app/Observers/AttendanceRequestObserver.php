@@ -87,7 +87,6 @@ class AttendanceRequestObserver
     private function updateCheckout(Attendance $attendance, AttendanceRequest $attendanceRequest): void
     {
         $attendance->updateQuietly([
-            'status'        => AttendanceStatus::Attend,
             'checkout_time' => $attendanceRequest->requested_time,
             'working_time'  => $this->calculateWorkingMinutes($attendance, $attendanceRequest),
         ]);
