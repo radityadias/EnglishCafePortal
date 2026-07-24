@@ -22,6 +22,7 @@ use App\Enums\ConfirmationStatus;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use UnitEnum;
 
@@ -65,6 +66,8 @@ class AttendanceRequestResource extends Resource
     {
         return $table
             ->recordTitleAttribute('attendance_request')
+            ->query(fn (): Builder => AttendanceRequest::query()
+                ->where('status', ConfirmationStatus::Pending))
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')
