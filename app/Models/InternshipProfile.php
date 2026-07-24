@@ -22,6 +22,9 @@ InternshipProfile extends Model
         'work_type',
         'work_time_start',
         'work_time_end',
+        'start_date',
+        'end_date',
+        'school',
         'division_id',
         'branch_id',
         'instance_id'
