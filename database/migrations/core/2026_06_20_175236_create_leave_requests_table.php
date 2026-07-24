@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('leave_requests', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['sick', 'leave', 'personal', 'other']);
-            $table->text('reason'); 
+            $table->string('type');
+            $table->text('reason');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->string('status')->nullable();
             $table->string('image_path')->nullable();
             $table->timestamps();
         });

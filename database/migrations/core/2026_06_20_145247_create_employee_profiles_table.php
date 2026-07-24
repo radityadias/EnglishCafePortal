@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\WorkType;
 
 return new class extends Migration
 {
@@ -24,8 +25,9 @@ return new class extends Migration
             $table->string('cv_path')->nullable();
             $table->string('ktp_path')->nullable();
             $table->string('other_path')->nullable();
-            $table->time('work_time_start')->nullable()->default(null);
-            $table->time('work_time_end')->nullable()->default(null);
+            $table->string('work_type')->nullable();
+            $table->time('work_time_start')->nullable();
+            $table->time('work_time_end')->nullable();
             $table->timestamps();
         });
     }

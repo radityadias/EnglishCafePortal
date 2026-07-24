@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Enums\Position;
+use App\Enums\WorkType;
 use App\Models\Branch;
 use App\Models\Division;
 use App\Models\Instance;
@@ -17,6 +18,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
@@ -72,6 +74,15 @@ class Profile extends Page
     private function isEmployee(): bool
     {
         return Auth::user()->position === Position::Employee;
+    }
+
+    private function isWorkTypeFixed(): bool
+    {
+        $workType = $this->user->employeeProfile?->work_type ?? $this->user->internshipProfile?->work_type
+        ;
+        return $workType instanceof WorkType
+            ? $workType === WorkType::Fixed
+            : $workType === WorkType::Fixed->value;
     }
 
     public function infolist(Schema $schema): Schema
@@ -143,12 +154,14 @@ class Profile extends Page
                         TextEntry::make('employeeProfile.branch.name')
                             ->label('Cabang')
                             ->default('-'),
-                        TextEntry::make('employeeProfile.work_time_start')
-                            ->label('Waktu Mulai Kerja')
+                        TextEntry::make('employeeProfile.work_type')
+                            ->label('Jenis Jam Kerja')
                             ->default('-'),
-                        TextEntry::make('employeeProfile.work_time_end')
-                            ->label('Waktu Selesai Kerja')
-                            ->default('-'),
+                        TextEntry::make('work_time_start')
+                            ->label('Waktu Kerja')
+                            ->formatStateUsing(fn ($state) => $this->user->employeeProfile->work_time_start . ' - ' . $this->user->employeeProfile->work_time_end)
+                            ->default('-')
+                            ->visible($this->isWorkTypeFixed()),
                         TextEntry::make('attendanceRecap.total_hours')
                             ->label('Total Jam Kerja')
                             ->default('-'),
@@ -170,6 +183,17 @@ class Profile extends Page
                             ->label('Tanggal Selesai')
                             ->date('d F Y')
                             ->placeholder('-'),
+                        TextEntry::make('internshipProfile.work_type')
+                            ->label('Jenis Jam Kerja')
+                            ->default('-'),
+                        TextEntry::make('internshipProfile.work_time_start')
+                            ->label('Waktu Mulai Kerja')
+                            ->default('-')
+                            ->visible($this->isWorkTypeFixed() ),
+                        TextEntry::make('internshipProfile.work_time_end')
+                            ->label('Waktu Selesai Kerja')
+                            ->default('-')
+                            ->visible($this->isWorkTypeFixed() ),
                         TextEntry::make('attendanceRecap.total_hours')
                             ->label('Total Jam Kerja')
                             ->default('-'),
@@ -237,6 +261,11 @@ class Profile extends Page
                     'cv_path' => $profile?->cv_path,
                     'branch_id' => $profile?->branch_id,
                     'division_id' => $profile?->division_id,
+                    'work_type' => $profile?->work_type instanceof WorkType
+                        ? $profile->work_type->value
+                        : $profile?->work_type,
+                    'work_time_start' => $profile?->work_time_start,
+                    'work_time_end' => $profile?->work_time_end,
                 ];
 
                 if ($this->isEmployee()) {
@@ -246,8 +275,6 @@ class Profile extends Page
                         'bank_number' => $profile?->bank_number,
                         'bank_account_name' => $profile?->bank_account_name,
                         'ktp_path' => $profile?->ktp_path,
-                        'work_time_start' => $profile?->work_time_start,
-                        'work_time_end' => $profile?->work_time_end,
                     ]);
                 }
 
@@ -291,6 +318,7 @@ class Profile extends Page
                             'bank_number' => $data['bank_number'] ?? null,
                             'bank_account_name' => $data['bank_account_name'] ?? null,
                             'ktp_path' => $data['ktp_path'] ?? null,
+                            'work_type' => $data['work_type'] ?? null,
                             'work_time_start' => $data['work_time_start'] ?? null,
                             'work_time_end' => $data['work_time_end'] ?? null,
                         ])
@@ -303,6 +331,7 @@ class Profile extends Page
                             'end_date' => $data['end_date'] ?? null,
                             'school' => $data['school'] ?? null,
                             'instance_id' => $data['instance_id'] ?? null,
+                            'work_type' => $data['work_type'] ?? null,
                         ])
                     );
                 }
@@ -417,10 +446,20 @@ class Profile extends Page
                             ->label('No. Rekening'),
                         TextInput::make('bank_account_name')
                             ->label('Nama Pemilik Rekening'),
+                        Select::make('work_type')
+                            ->options([
+                                WorkType::Fixed->value => 'Tetap',
+                                WorkType::Regular->value => '8 Jam',
+                                WorkType::Flexible->value => 'Fleksibel',
+                            ])
+                            ->live()
+                            ->searchable(),
                         TimePicker::make('work_time_start')
-                            ->label('Waktu Mulai Kerja'),
+                            ->label('Waktu Mulai Kerja')
+                            ->visible(fn (Get $get): bool => $get('work_type') === WorkType::Fixed->value),
                         TimePicker::make('work_time_end')
-                            ->label('Waktu Selesai Kerja'),
+                            ->label('Waktu Selesai Kerja')
+                            ->visible(fn (Get $get): bool => $get('work_type') === WorkType::Fixed->value),
                         Select::make('branch_id')
                             ->label('Branch')
                             ->options(Branch::all()->pluck('name', 'id'))

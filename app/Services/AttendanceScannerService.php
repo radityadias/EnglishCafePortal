@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\AttendanceStatus;
 use App\Enums\Position;
+use App\Enums\WorkType;
 use App\Models\Attendance;
 use App\Models\User;
 use Carbon\Carbon;
@@ -31,6 +32,12 @@ class AttendanceScannerService
         if (!$this->isBranchConfigured($user))
         {
             $this->notificationService->errorNotification(__('notification.branch_title'), __('notification.branch_description'));
+            return;
+        }
+
+        if (!$this->isWorkTimeConfigured($user))
+        {
+            $this->notificationService->errorNotification(__('notification.work_time_title'), __('notification.work_time_description'));
             return;
         }
 
@@ -98,6 +105,7 @@ class AttendanceScannerService
             ->whereNull('checkout_time')
             ->first();
 
+
         if (!$attendance) {
             return false;
         }
@@ -107,21 +115,35 @@ class AttendanceScannerService
         return true;
     }
 
-    private function checkAttendanceStatus(User $user,Carbon $checkin_time): AttendanceStatus
+    private function checkAttendanceStatus(User $user, Carbon $checkin_time): AttendanceStatus
     {
         if ($this->isEmployee($user)) {
-            $workTimeStart = $user->employeeProfile?->work_time_start;
+            if ($this->getWorkType($user) === WorkType::Fixed) {
+                $workTimeStart = $user->employeeProfile?->work_time_start;
 
-            if (!$workTimeStart) {
-                return AttendanceStatus::Attend;
+                if (!$workTimeStart) {
+                    return AttendanceStatus::Attend;
+                }
+
+                return $checkin_time->gt(Carbon::parse($workTimeStart))
+                    ? AttendanceStatus::Late
+                    : AttendanceStatus::Attend;
             }
-
-            return $checkin_time->gt(Carbon::parse($workTimeStart))
-                ? AttendanceStatus::Late
-                : AttendanceStatus::Attend;
         }
 
         return AttendanceStatus::Attend;
+    }
+
+    private function getWorkType(User $user): ?WorkType
+    {
+        $workType = $user->employeeProfile?->work_type
+            ?? $user->internshipProfile?->work_type;
+
+        if ($workType instanceof WorkType) {
+            return $workType;
+        }
+
+        return $workType ? WorkType::tryFrom($workType) : null;
     }
 
     private function isEmployee($user): bool
@@ -173,6 +195,15 @@ class AttendanceScannerService
         $lng = $this->getUserBranchLongitude($user);
 
         return $lat !== null && $lng !== null;
+    }
+
+    private function isWorkTimeConfigured($user): bool
+    {
+        if ($this->getWorkType($user) !== WorkType::Fixed) {
+            return true;
+        }
+
+        return !is_null($user->employeeProfile?->work_time_start ?? $user->internshipProfile?->work_time_start);
     }
 
     private function isPositionValid($distance): bool

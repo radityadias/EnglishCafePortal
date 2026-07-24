@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\WorkType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,10 +19,20 @@ InternshipProfile extends Model
         'user_id',
         'start_date',
         'end_date',
+        'work_type',
+        'work_time_start',
+        'work_time_end',
         'division_id',
         'branch_id',
         'instance_id'
     ];
+
+    public function casts()
+    {
+        return [
+            'work_time' => WorkType::class,
+        ];
+    }
 
     public function user() : BelongsTo
     {

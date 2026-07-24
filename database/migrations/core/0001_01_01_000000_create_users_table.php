@@ -18,17 +18,7 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->timestamp('password_set_at')->nullable()->after('password');
             $table->string('phone')->nullable();
-            $table->enum('position',
-                [
-                    'Onboarding',
-                    'Training',
-                    'Internship',
-                    'Karyawan',
-                    'Nonaktif',
-                    'Admin',
-                    'Super Admin'
-                ])
-                ->default('Nonaktif');
+            $table->string('position')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

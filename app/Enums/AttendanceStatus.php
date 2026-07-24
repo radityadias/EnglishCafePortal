@@ -9,4 +9,6 @@ enum AttendanceStatus: string
     case Absent = 'absent';
     case Incomplete = 'incomplete';
     case Leave = 'leave';
+    case CheckIn = 'checkin';
+    case CheckOut = 'checkout';
 }
