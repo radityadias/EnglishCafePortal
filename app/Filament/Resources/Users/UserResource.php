@@ -99,7 +99,7 @@ class UserResource extends Resource
                     ->searchable()
             ])
             ->recordActions([
-                SendSetupLinkAction::make(),
+//                SendSetupLinkAction::make(),
                 EditAction::make(),
                 DeleteAction::make()
                     ->label('Hapus'),
