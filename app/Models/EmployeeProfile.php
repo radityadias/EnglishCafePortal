@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\WorkType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,6 +18,7 @@ class EmployeeProfile extends Model
         'bank_number',
         'bank_name',
         'bank_account_name',
+        'work_type',
         'work_time_start',
         'work_time_end',
         'cv_path',
@@ -26,6 +28,13 @@ class EmployeeProfile extends Model
         'division_id',
         'branch_id',
     ];
+
+    public function casts()
+    {
+        return [
+            'work_time' => WorkType::class,
+        ];
+    }
 
     public function user() : BelongsTo
     {

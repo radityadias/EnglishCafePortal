@@ -15,19 +15,21 @@ class DivisionSeeder extends Seeder
     {
         DB::table('divisions')->insert([
             [
-                'name' => 'IT / Engineering',
+                'name' => 'General Affairs',
             ], [
-                'name' => 'Human Resources'
+                'name' => 'Chef Operational'
             ], [
-                'name' => 'Creative & Multimedia'
+                'name' => 'Master Chef'
             ], [
-                'name' => 'Marketing & Social Media'
+                'name' => 'Admin Sales'
             ], [
-                'name' => 'Education / Language'
+                'name' => 'Marketing & Sales'
             ], [
-                'name' => 'Administration'
+                'name' => 'Customer Care'
             ], [
-                'name' => 'Finance'
+                'name' => 'HRD'
+            ],[
+                'name' => 'Graphic Design'
             ]
         ]);
     }

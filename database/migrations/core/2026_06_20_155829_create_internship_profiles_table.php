@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->string('cv_path')->nullable();
+            $table->string('work_type')->nullable();
             $table->timestamps();
         });
     }

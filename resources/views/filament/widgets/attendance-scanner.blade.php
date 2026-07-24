@@ -33,22 +33,35 @@
                     );
                 }
             }"
-            class="flex flex-col items-center justify-center gap-6 p-4"
+            class="flex flex-col items-center justify-center gap-10 p-4"
         >
-            <div class="flex items-center gap-4">
-                <div class="p-3 bg-amber-500/10 text-amber-500 rounded-xl">
-                    <x-heroicon-o-clock class="w-8 h-8 animate-pulse" />
-                </div>
-                <div wire:ignore class="flex flex-col">
-                    <span class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Sistem Kehadiran Digital</span>
-                    <span x-ref="clock" class="text-3xl font-black text-gray-900 dark:text-white font-mono tracking-tight">
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-2">
+                <div class="flex items-center justify-start gap-4 order-2 md:order-1">
+                    <div class="p-3 bg-amber-500/10 text-amber-500 rounded-xl">
+                        <x-heroicon-o-clock class="w-8 h-8 animate-pulse"/>
+                    </div>
+                    <div wire:ignore class="flex flex-col">
+                        <span class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Sistem Kehadiran Digital</span>
+                        <span x-ref="clock"
+                              class="text-3xl font-black text-gray-900 dark:text-white font-mono tracking-tight">
                         {{ now()->isoFormat('HH:mm:ss') }}
                     </span>
-                    <span class="text-xs text-gray-400">
-                        {{ now()->isoFormat('D MMMM YYYY') }} • Cabang: {{ auth()->user()->employeeProfile?->branch?->name ?? 'Belum Diatur' }}
+                        <span class="text-xs text-gray-400">
+                        {{ now()->isoFormat('D MMMM YYYY') }} • Cabang: {{ $this->branch }}
                     </span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-start md:justify-end gap-2 order-1 md:order-2">
+                    <div class="p-3 bg-amber-800/10 text-orange-800 rounded-xl order-1 md:order-2">
+                        <x-heroicon-o-user-circle class="w-8 h-8"/>
+                    </div>
+                    <div class="flex flex-col items-start md:items-end gap-1 order-2 md:order-1">
+                        <span class="text-md text-gray-500 font-semibold">Selamat Datang</span>
+                        <span class="text-2xl text-white font-bold">{{ $this->user }}</span>
+                    </div>
                 </div>
             </div>
+
 
             <div class="w-full flex flex-col md:flex-row items-center justify-between gap-3">
 
@@ -60,7 +73,7 @@
                         x-bind:disabled="sending"
                         class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-green-500 hover:bg-green-600 transition-all rounded-xl shadow-md focus:ring-4 focus:ring-green-500/20 disabled:opacity-60"
                     >
-                        <x-heroicon-m-finger-print class="w-5 h-5" />
+                        <x-heroicon-m-finger-print class="w-5 h-5"/>
                         <span x-text="sending ? 'Mengunci Sinyal Satelit...' : 'Kirim Kehadiran (GPS)'"></span>
                     </button>
                 @elseif($alreadyCheckedIn && !$alreadyCheckedOut)
@@ -70,12 +83,13 @@
                         x-bind:disabled="sending"
                         class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-red-500 hover:bg-red-600 transition-all rounded-xl shadow-md focus:ring-4 focus:ring-red-500/20 disabled:opacity-60"
                     >
-                        <x-heroicon-m-finger-print class="w-5 h-5" />
+                        <x-heroicon-m-finger-print class="w-5 h-5"/>
                         <span x-text="sending ? 'Mengunci Sinyal Satelit...' : 'Absen Pulang (GPS)'"></span>
                     </button>
                 @else
-                    <div class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-green-600 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200">
-                        <x-heroicon-m-check-circle class="w-5 h-5" />
+                    <div
+                        class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-green-600 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200">
+                        <x-heroicon-m-check-circle class="w-5 h-5"/>
                         <span>Anda Sudah Absen Hari Ini</span>
                     </div>
                 @endif

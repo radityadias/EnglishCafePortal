@@ -27,9 +27,11 @@ class UpdateAttendanceAbsent implements ShouldQueue
     {
         $absent = $this->getAbsentUser();
         $leave = $this->getLeaveUser();
+        $invalid = $this->getInvalidUser();
 
         $this->storeAttendanceAbsent($absent);
         $this->storeAttendanceLeave($leave);
+        $this->updateAttendanceInvalid($invalid);
     }
 
     public function getAbsentUser(): Collection
@@ -52,6 +54,15 @@ class UpdateAttendanceAbsent implements ShouldQueue
                 ->where('status', 'approved');
         })
             ->get();
+    }
+
+    public function getInvalidUser(): Collection
+    {
+        return User::whereHas('attendances', function ($query) {
+            $query->where('checkin_date', today())
+                ->whereNotNull('checkin_time')
+                ->whereNull('checkout_time');
+        })->get();
     }
 
     public function storeAttendanceAbsent(Collection $users): void
@@ -82,6 +93,18 @@ class UpdateAttendanceAbsent implements ShouldQueue
                 ]
             );
         }
+    }
 
+    public function updateAttendanceInvalid(Collection $users): void
+    {
+        foreach ($users as $user) {
+            Attendance::update([
+                'user_id' => $user->id,
+                'checkin_date' => today(),
+            ],
+            [
+                'status' => AttendanceStatus::Absent,
+            ]);
+        }
     }
 }

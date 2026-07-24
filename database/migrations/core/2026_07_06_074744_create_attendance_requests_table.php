@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('attendance_requests', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->string('type');
+            $table->string('status');
             $table->text('reason')->nullable();
             $table->date('date')->nullable();
+            $table->time('requested_time')->nullable();
             $table->string('image_path')->nullable();
             $table->timestamps();
         });
