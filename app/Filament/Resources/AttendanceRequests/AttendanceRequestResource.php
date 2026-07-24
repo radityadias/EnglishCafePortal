@@ -89,8 +89,9 @@ class AttendanceRequestResource extends Resource
                 SelectColumn::make('status')
                     ->label('Status')
                     ->options([
-                        ConfirmationStatus::Approved->value => 'Setujui',
+                        ConfirmationStatus::Approved->value => 'Setuju',
                         ConfirmationStatus::Rejected->value => 'Tolak',
+                        ConfirmationStatus::Pending->value => 'Pending',
                     ]),
                 TextColumn::make('image_path')
                     ->label('Bukti Foto')

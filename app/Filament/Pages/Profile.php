@@ -261,6 +261,7 @@ class Profile extends Page
                     'cv_path' => $profile?->cv_path,
                     'branch_id' => $profile?->branch_id,
                     'division_id' => $profile?->division_id,
+                    'instance_id' => $profile?->instance_id,
                     'work_type' => $profile?->work_type instanceof WorkType
                         ? $profile->work_type->value
                         : $profile?->work_type,
@@ -403,6 +404,7 @@ class Profile extends Page
 
             Section::make('Keamanan')
                 ->columns(2)
+                ->description('Isi form di bawah jika hanya ingin mengganti pasword baru')
                 ->schema([
                     TextInput::make('current_password')
                         ->label('Password Saat Ini')
@@ -475,6 +477,20 @@ class Profile extends Page
             $shared[] = Section::make('Informasi Magang')
                 ->columns(2)
                 ->schema([
+                    Select::make('work_type')
+                        ->options([
+                            WorkType::Fixed->value => 'Tetap',
+                            WorkType::Regular->value => '8 Jam',
+                            WorkType::Flexible->value => 'Fleksibel',
+                        ])
+                        ->live()
+                        ->searchable(),
+                    TimePicker::make('work_time_start')
+                        ->label('Waktu Mulai Kerja')
+                        ->visible(fn (Get $get): bool => $get('work_type') === WorkType::Fixed->value),
+                    TimePicker::make('work_time_end')
+                        ->label('Waktu Selesai Kerja')
+                        ->visible(fn (Get $get): bool => $get('work_type') === WorkType::Fixed->value),
                     Select::make('branch_id')
                         ->label('Branch')
                         ->options(Branch::all()->pluck('name', 'id'))
