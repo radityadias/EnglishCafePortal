@@ -34,7 +34,7 @@ class AttendanceRequestResource extends Resource
 
     protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
 
-     protected static ?string $pluralModelLabel = 'Ijin Manual';
+     protected static ?string $pluralModelLabel = 'Permintaan Absen';
 
     protected static ?string $recordTitleAttribute = 'attendance_request';
 
