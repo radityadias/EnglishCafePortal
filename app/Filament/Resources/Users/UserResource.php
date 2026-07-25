@@ -17,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use UnitEnum;
 
@@ -54,6 +55,7 @@ class UserResource extends Resource
                         Position::Training->value => 'Training',
                         Position::Nonactive->value => 'Nonaktif',
                         Position::Admin->value => 'Admin',
+                        Position::SuperAdmin->value => 'Super Admin',
                     ])
                     ->default('Nonaktif'),
                 Select::make('roles ')
@@ -83,7 +85,18 @@ class UserResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('position')
+                    ->label('Posisi')
+                    ->options([
+                        Position::Employee->value => 'Karyawan',
+                        Position::Internship->value => 'Internship',
+                        Position::Onboarding->value => 'Onboarding',
+                        Position::Training->value => 'Training',
+                        Position::Nonactive->value => 'Nonaktif',
+                        Position::Admin->value => 'Admin',
+                        Position::SuperAdmin->value => 'Super Admin',
+                    ])
+                    ->searchable()
             ])
             ->recordActions([
                 SendSetupLinkAction::make(),

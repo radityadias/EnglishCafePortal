@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Attendances;
 
+use App\Enums\AttendanceStatus;
 use App\Filament\Resources\Attendances\Pages\ManageAttendances;
 use App\Models\Attendance;
 use BackedEnum;
@@ -57,8 +58,13 @@ class AttendanceResource extends Resource
                     ->label('Nama')
                     ->searchable(),
                 TextColumn::make('status')
-                    ->label('Status')
-                    ->searchable(),
+                    ->badge()
+                    ->color(fn (AttendanceStatus $state) => match ($state) {
+                        AttendanceStatus::Attend => 'success',
+                        AttendanceStatus::Late => 'warning',
+                        AttendanceStatus::Absent => 'danger',
+                        AttendanceStatus::Leave => 'info',
+                    }),
                 TextColumn::make('checkin_date')
                     ->label('Tanggal Masuk')
                     ->date()

@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Attendance;
+use App\Models\AttendanceRequest;
 use App\Models\User;
 use App\Observers\AttendanceObserver;
+use App\Observers\AttendanceRequestObserver;
 use App\Observers\UserObserver;
 use Filament\Forms\Components\FileUpload;
 use Filament\Support\Facades\FilamentColor;
@@ -37,5 +39,6 @@ class AppServiceProvider extends ServiceProvider
 
         User::observe(UserObserver::class);
         Attendance::observe(AttendanceObserver::class);
+        AttendanceRequest::observe(AttendanceRequestObserver::class);
     }
 }

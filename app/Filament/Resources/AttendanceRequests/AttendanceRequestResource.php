@@ -5,17 +5,24 @@ namespace App\Filament\Resources\AttendanceRequests;
 use App\Filament\Resources\AttendanceRequests\Pages\ManageAttendanceRequests;
 use App\Models\AttendanceRequest;
 use BackedEnum;
+use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use App\Enums\ConfirmationStatus;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use UnitEnum;
 
@@ -35,9 +42,23 @@ class AttendanceRequestResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('attendance_request')
-                    ->required()
-                    ->maxLength(255),
+                TextInput::make('type')
+                    ->label('Jenis'),
+                DatePicker::make('date')
+                    ->label('Tanggal')
+                    ->maxDate(Carbon::now()),
+                TimePicker::make('requested_time')
+                    ->label('Request Waktu'),
+                Textarea::make('reason')
+                    ->label('Alasan'),
+                FileUpload::make('image_path')
+                    ->label('Bukti Foto')
+                    ->image()
+                    ->directory('absen')
+                    ->disk('s3')
+                    ->preventFilePathTampering(
+                        allowFilePathUsing: fn(string $file): bool => str_starts_with($file, 'absen/')
+                    ),
             ]);
     }
 
@@ -45,10 +66,19 @@ class AttendanceRequestResource extends Resource
     {
         return $table
             ->recordTitleAttribute('attendance_request')
+            ->query(fn (): Builder => AttendanceRequest::query()
+                ->where('status', ConfirmationStatus::Pending))
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')
                     ->searchable()
+                    ->sortable(),
+                TextColumn::make('type')
+                    ->label('Jenis')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('requested_time')
+                    ->label('Request Waktu')
                     ->sortable(),
                 TextColumn::make('reason')
                     ->label('Alasan')
@@ -59,14 +89,13 @@ class AttendanceRequestResource extends Resource
                     ->date()
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('status')
+                SelectColumn::make('status')
                     ->label('Status')
-                    ->badge()
-                    ->color(fn (ConfirmationStatus $state) => match ($state) {
-                        ConfirmationStatus::Pending => 'warning',
-                        ConfirmationStatus::Approved => 'success',
-                        ConfirmationStatus::Rejected => 'danger',
-                    }),
+                    ->options([
+                        ConfirmationStatus::Approved->value => 'Setuju',
+                        ConfirmationStatus::Rejected->value => 'Tolak',
+                        ConfirmationStatus::Pending->value => 'Pending',
+                    ]),
                 TextColumn::make('image_path')
                     ->label('Bukti Foto')
                     ->icon(Heroicon::Photo)
