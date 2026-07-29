@@ -13,7 +13,8 @@ class ManageAttendanceRequests extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+            ->label('Attendance Request Baru'),
         ];
     }
 }
