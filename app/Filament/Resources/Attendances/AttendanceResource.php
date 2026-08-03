@@ -20,6 +20,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
@@ -58,6 +59,7 @@ class AttendanceResource extends Resource
     {
         return $table
             ->recordTitleAttribute('user.name')
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->orderBy('updated_at', 'desc'))
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')
