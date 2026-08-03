@@ -74,6 +74,16 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(AttendanceRecap::class);
     }
 
+    public function classSession() : HasOne
+    {
+        return $this->hasOne(ClassSession::class);
+    }
+
+    public function appointment() : HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
     public function hasSetPassword() : bool
     {
         return !is_null($this->password_set_at);
