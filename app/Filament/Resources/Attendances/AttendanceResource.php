@@ -15,9 +15,12 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -86,7 +89,28 @@ class AttendanceResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        AttendanceStatus::Attend->value => 'Tepat Waktu',
+                        AttendanceStatus::Late->value => 'Terlambat',
+                        AttendanceStatus::Absent->value => 'Tidak Hadir',
+                    ])
+                    ->preload()
+                    ->searchable(),
+                Filter::make('date')
+                    ->label('Tanggal')
+                    ->schema([
+                        DatePicker::make('checkin_date')
+                            ->label('Tanggal Masuk')
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['checkin_date'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('checkin_date', $date)
+                            );
+                    })
             ])
             ->recordActions([
                 EditAction::make(),
