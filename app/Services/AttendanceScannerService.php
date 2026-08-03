@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class AttendanceScannerService
 {
     private NotificationService $notificationService;
-    private const float ALLOWED_RADIUS = 50.0;
+    private const float ALLOWED_RADIUS = 100.0;
 
     public function __construct(NotificationService $service)
     {
@@ -149,6 +149,14 @@ class AttendanceScannerService
     private function isEmployee($user): bool
     {
         return $user->position === Position::Employee;
+    }
+
+    public function isDivisionChef($user): bool
+    {
+        return in_array($user->division?->name, [
+            'Master Chef',
+            'Chef Operational'
+        ], true);
     }
 
     public function isAlreadyCheckedIn(): bool

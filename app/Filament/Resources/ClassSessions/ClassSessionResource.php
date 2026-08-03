@@ -15,12 +15,17 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ClassSessionResource extends Resource
 {
     protected static ?string $model = ClassSession::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
+
+    protected static ?string $pluralModelLabel = 'Laporan Kelas';
 
     protected static ?string $recordTitleAttribute = 'user_id.name';
 
@@ -39,8 +44,19 @@ class ClassSessionResource extends Resource
         return $table
             ->recordTitleAttribute('user_id.name')
             ->columns([
-                TextColumn::make('user_id.name')
+                TextColumn::make('user.name')
+                    ->label('Nama')
                     ->searchable(),
+                TextColumn::make('type')
+                    ->label('Type'),
+                TextColumn::make('date')
+                    ->label('Tanggal'),
+                TextColumn::make('start_time')
+                    ->label('Waktu Mulai'),
+                TextColumn::make('end_time')
+                    ->label('Waktu Selesai'),
+                TextColumn::make('notes')
+                    ->label('Catatan'),
             ])
             ->filters([
                 //

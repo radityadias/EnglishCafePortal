@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Filament\Actions\Attendance\AttendanceRequestAction;
+use App\Filament\Actions\Attendance\ClassSessionReportAction;
 use App\Filament\Actions\Attendance\LeaveRequestAction;
 use App\Models\Branch;
 use App\Models\User;
@@ -27,6 +28,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
 
     public bool $alreadyCheckedIn = false;
     public bool $alreadyCheckedOut = false;
+    public bool $isDivisionChef = false;
 
     public string $user;
     public string $branch;
@@ -42,6 +44,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
     {
         $this->alreadyCheckedIn = $this->attendanceService->isAlreadyCheckedIn();
         $this->alreadyCheckedOut = $this->attendanceService->isAlreadyCheckedOut();
+        $this->isDivisionChef = $this->attendanceService->isDivisionChef(Auth::user());
     }
 
     public function leaveRequestAction(): Action
@@ -52,6 +55,11 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
     public function attendanceRequestAction(): Action
     {
         return AttendanceRequestAction::make();
+    }
+
+    public function classSessionReportAction(): Action
+    {
+        return ClassSessionReportAction::make();
     }
 
     public function processAttendance(float $latitude, float $longitude): void

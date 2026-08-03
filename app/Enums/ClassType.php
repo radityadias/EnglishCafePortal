@@ -2,7 +2,8 @@
 
 namespace App\Enums;
 
-enum ClassType
+enum ClassType: string
 {
-    //
+    case DailyTalk = 'Daily Talk';
+    case Teory = 'Teori';
 }
