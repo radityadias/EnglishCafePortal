@@ -16,24 +16,34 @@ use Filament\Forms\Components\TextInput;
 use app\Enums\AttendanceStatus;
 use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class AttendanceResource extends Resource
 {
     protected static ?string $model = Attendance::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::QueueList;
 
     protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
 
     protected static ?string $pluralModelLabel = 'Presensi';
 
-    protected static ?string $recordTitleAttribute = 'attendance';
+    protected static ?string $recordTitleAttribute = 'user.name';
 
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->user->name;
+    }
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -52,7 +62,8 @@ class AttendanceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('attendance')
+            ->recordTitleAttribute('user.name')
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->orderBy('updated_at', 'desc'))
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')
@@ -79,9 +90,34 @@ class AttendanceResource extends Resource
                     ->sortable(),
             ])
             ->filters([
+<<<<<<< HEAD
                 Selectfilter::Status('status')
                     ->Status('Status')
                     ->options(AttendanceStatus::class)
+=======
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        AttendanceStatus::Attend->value => 'Tepat Waktu',
+                        AttendanceStatus::Late->value => 'Terlambat',
+                        AttendanceStatus::Absent->value => 'Tidak Hadir',
+                    ])
+                    ->preload()
+                    ->searchable(),
+                Filter::make('date')
+                    ->label('Tanggal')
+                    ->schema([
+                        DatePicker::make('checkin_date')
+                            ->label('Tanggal Masuk')
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['checkin_date'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('checkin_date', $date)
+                            );
+                    })
+>>>>>>> 352d68a0c0016c43243ce7583be1491992f07828
             ])
             ->recordActions([
                 EditAction::make(),

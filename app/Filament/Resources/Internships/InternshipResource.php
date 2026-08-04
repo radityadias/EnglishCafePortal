@@ -15,6 +15,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class InternshipResource extends Resource
@@ -23,12 +25,14 @@ class InternshipResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Users;
 
-    protected static ?string $recordTitleAttribute = 'internship';
-
     protected static string | UnitEnum | null $navigationGroup = 'Biodata';
 
-    protected static ?string $pluralModelLabel = 'Internship';
+    protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->name;
+    }
     public static function getModelLabel(): string
     {
         return 'internship';

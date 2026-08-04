@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\AttendanceStatus;
+use App\Enums\ConfirmationStatus;
 use App\Models\Attendance;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -51,7 +52,7 @@ class UpdateAttendanceAbsent implements ShouldQueue
         return User::whereHas('leaveRequest', function ($query) {
             $query->where('start_date', '<=', today())
                 ->where('end_date', '>=', today())
-                ->where('status', 'approved');
+                ->where('status', ConfirmationStatus::Approved);
         })
             ->get();
     }

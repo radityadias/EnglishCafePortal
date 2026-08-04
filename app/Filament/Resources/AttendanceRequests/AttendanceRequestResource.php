@@ -22,7 +22,9 @@ use App\Enums\ConfirmationStatus;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use UnitEnum;
 
@@ -30,14 +32,18 @@ class AttendanceRequestResource extends Resource
 {
     protected static ?string $model = AttendanceRequest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocumentCheck;
 
     protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
 
-     protected static ?string $pluralModelLabel = 'Ijin Manual';
+    protected static ?string $pluralModelLabel = 'Permintaan Absen';
 
-    protected static ?string $recordTitleAttribute = 'attendance_request';
+    protected static ?string $recordTitleAttribute = 'user.name';
 
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->user->name;
+    }
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -65,7 +71,7 @@ class AttendanceRequestResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('attendance_request')
+
             ->query(fn (): Builder => AttendanceRequest::query()
                 ->where('status', ConfirmationStatus::Pending))
             ->columns([

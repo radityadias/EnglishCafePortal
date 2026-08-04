@@ -19,22 +19,29 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use App\Enums\ConfirmationStatus;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class LeaveRequestResource extends Resource
 {
     protected static ?string $model = LeaveRequest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::PaperAirplane;
 
     protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
 
-    protected static ?string $pluralModelLabel = 'Daftar Permintaan Cuti';
+    protected static ?string $pluralModelLabel = 'Permintaan Libur';
 
-    protected static ?string $recordTitleAttribute = 'leave_request';
-
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->user->name;
+    }
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -51,7 +58,7 @@ class LeaveRequestResource extends Resource
                         'approved' => 'Approved',
                         'rejected' => 'Rejected',
                     ]),
-                TextColumn::make('image_path')
+                FileUpload::make('image_path')
                     ->label('Bukti Foto')
                     ->icon(Heroicon::Photo)
                     ->formatStateUsing(fn ($state) => $state ? 'Foto' : '-')
@@ -59,7 +66,6 @@ class LeaveRequestResource extends Resource
                         if (!$record->image_path) {
                             return null;
                         }
-
                         return Storage::disk('s3')->temporaryUrl($record->image_path, now()->addMinutes(5));
                     })
                     ->openUrlInNewTab()
@@ -87,35 +93,42 @@ class LeaveRequestResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('leave_request')
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('user.name')
-                ->searchable()
-                ->label ('Nama'),
+                    ->searchable()
+                    ->label ('Nama')
+                    ->sortable(),
                 TextColumn::make('type')
                     ->searchable()
-                    ->label ('Jenis'),
+                    ->label ('Jenis')
+                    ->sortable(),
                 TextColumn::make('start_date')
-                ->date()
-                    ->sortable()
-                    ->label ('Tanggal Mulai'),
-                TextColumn::make('end_date')
+                    ->label ('Tanggal Mulai')
                     ->date()
-                    ->sortable()
-                    ->label ('Tanggal Selesai'),
-                TextColumn::make('status')
-                    ->searchable(),
-                TextColumn::make('status')
+                    ->sortable(),
+                TextColumn::make('end_date')
+                    ->label ('Tanggal Selesai')
+                    ->date()
+                    ->sortable(),
+                SelectColumn::make('status')
                     ->label('Status')
-                    ->badge()
-                    ->color(fn (ConfirmationStatus $state) => match ($state) {
-                        ConfirmationStatus::Pending => 'warning',
-                        ConfirmationStatus::Approved => 'success',
-                        ConfirmationStatus::Rejected => 'danger',
-                    }),
+                    ->options([
+                        ConfirmationStatus::Pending->value => 'Pending',
+                        ConfirmationStatus::Approved->value => 'Approved',
+                        ConfirmationStatus::Rejected->value => 'Rejected',
+                    ])
+                    ->searchable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        ConfirmationStatus::Pending->value => 'Pending',
+                        ConfirmationStatus::Approved->value => 'Approved',
+                        ConfirmationStatus::Rejected->value => 'Rejected',
+                    ])
+                    ->multiple()
+                    ->searchable(),
             ])
             ->recordActions([
                 EditAction::make(),
