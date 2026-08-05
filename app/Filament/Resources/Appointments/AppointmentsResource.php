@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Appointments;
 
 use App\Filament\Resources\Appointments\Pages\ManageAppointments;
 use App\Models\Appointment;
-use App\Models\User;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -18,12 +17,17 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use UnitEnum;
 
 class AppointmentsResource extends Resource
 {
     protected static ?string $model = Appointment::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Phone;
+
+    protected static string | UnitEnum | null $navigationGroup = 'Rekrutmen';
+
+    protected static ?string $pluralModelLabel = 'Appointments';
 
     protected static ?string $recordTitleAttribute = 'user.name';
 

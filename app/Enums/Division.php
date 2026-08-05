@@ -27,7 +27,7 @@ enum Division: string
         };
     }
 
-    public function kpiTracked() : array
+    public static function kpiTracked() : array
     {
         return [self::MasterChef, self::OperationalChef];
     }

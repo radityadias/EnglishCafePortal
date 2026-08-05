@@ -502,9 +502,18 @@ class Profile extends Page
                         ->options(Branch::all()->pluck('name', 'id'))
                         ->preload()
                         ->searchable(),
-                    Select::make('division_id')
+                    Select::make('division')
                         ->label('Divisi')
-                        ->options(Division::all()->pluck('name', 'id'))
+                        ->options([
+                            Division::GeneralAffairs->value => 'General Affairs',
+                            Division::OperationalChef->value => 'Operational Chef',
+                            Division::MasterChef->value => 'Master Chef',
+                            Division::AdminSales->value => 'Admin Sales',
+                            Division::MarketingSales->value => 'Marketing Sales',
+                            Division::CustomerCare->value => 'Customer Care',
+                            Division::HumanResourcesDevelopment->value => 'Human Resources & Development',
+                            Division::GraphicDesign->value => 'Graphic Design',
+                        ])
                         ->preload()
                         ->searchable(),
                     Select::make('instance_id')

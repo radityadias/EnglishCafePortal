@@ -87,7 +87,9 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessKpiFeatures(): bool
     {
-        return ($this->employeeProfile?->isKpiTracked()) || $this->hasAnyRole(['super_admin', 'admin']) ?? false;
+        $isKpiTracked = ($this->employeeProfile?->isKpiTracked() || $this->internshipProfile?->isKpiTracked());
+
+        return ($isKpiTracked || $this->hasAnyRole(['super_admin', 'admin']) ?? false);
     }
 
     public function hasSetPassword() : bool
