@@ -11,7 +11,9 @@ class Appointment extends Model
 
     protected $fillable = [
         'user_id',
+        'name',
         'phone',
+        'payment_amount',
         'is_contacted',
         'is_success'
     ];

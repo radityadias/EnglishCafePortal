@@ -35,7 +35,7 @@ class ClassSessionReportAction extends Action
                     ->label('Jenis Kelas')
                     ->options([
                         ClassType::DailyTalk->value => 'Daily Talk',
-                        ClassType::Teory->value => 'Teori',
+                        ClassType::Theory->value => 'Teori',
                     ])
                     ->required(),
                 TimePicker::make('start_time')

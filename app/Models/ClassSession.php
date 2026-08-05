@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ClassType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,6 +19,13 @@ class ClassSession extends Model
         'start_time',
         'end_time',
     ];
+
+    public function casts(): array
+    {
+        return [
+            'type' => ClassType::class
+        ];
+    }
 
     public function user(): BelongsTo
     {

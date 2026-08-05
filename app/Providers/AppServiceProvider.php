@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Appointment;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Models\User;
+use App\Observers\AppointmentObserver;
 use App\Observers\AttendanceObserver;
 use App\Observers\AttendanceRequestObserver;
 use App\Observers\UserObserver;
@@ -40,5 +42,6 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Attendance::observe(AttendanceObserver::class);
         AttendanceRequest::observe(AttendanceRequestObserver::class);
+        Appointment::observe(AppointmentObserver::class);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Appointments;
 
 use App\Filament\Resources\Appointments\Pages\ManageAppointments;
 use App\Models\Appointment;
+use App\Models\User;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -16,6 +17,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentsResource extends Resource
 {
@@ -24,6 +26,11 @@ class AppointmentsResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'user.name';
+
+    public static function canViewAny(): bool
+    {
+        return Auth::user()?->canAccessKpiFeatures() ?? false;
+    }
 
     public static function form(Schema $schema): Schema
     {

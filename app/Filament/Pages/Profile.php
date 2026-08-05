@@ -2,10 +2,10 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\Division;
 use App\Enums\Position;
 use App\Enums\WorkType;
 use App\Models\Branch;
-use App\Models\Division;
 use App\Models\Instance;
 use App\Models\User;
 use Filament\Actions\Action;
@@ -43,11 +43,9 @@ class Profile extends Page
             $this->isEmployee() ? [
                 'employeeProfile',
                 'employeeProfile.branch',
-                'employeeProfile.division',
             ] : [
                 'internshipProfile',
                 'internshipProfile.branch',
-                'internshipProfile.division',
                 'internshipProfile.instance',
             ]
         );
@@ -200,7 +198,7 @@ class Profile extends Page
                         TextEntry::make('internshipProfile.branch.name')
                             ->label('Branch')
                             ->default('-'),
-                        TextEntry::make('internshipProfile.division.name')
+                        TextEntry::make('internshipProfile.division')
                             ->label('Divisi')
                             ->default('-'),
                         TextEntry::make('internshipProfile.instance.name')
@@ -259,8 +257,8 @@ class Profile extends Page
                     'address' => $profile?->address,
                     'school' => $profile?->school,
                     'cv_path' => $profile?->cv_path,
+                    'division' => $profile?->division,
                     'branch_id' => $profile?->branch_id,
-                    'division_id' => $profile?->division_id,
                     'instance_id' => $profile?->instance_id,
                     'work_type' => $profile?->work_type instanceof WorkType
                         ? $profile->work_type->value
@@ -307,7 +305,7 @@ class Profile extends Page
                     'address' => $data['address'],
                     'cv_path' => $data['cv_path'] ?? null,
                     'branch_id' => $data['branch_id'] ?? null,
-                    'division_id' => $data['division_id'] ?? null,
+                    'division' => $data['division'] ?? null,
                 ];
 
                 if ($this->isEmployee()) {
@@ -467,10 +465,18 @@ class Profile extends Page
                             ->options(Branch::all()->pluck('name', 'id'))
                             ->preload()
                             ->searchable(),
-                        Select::make('division_id')
+                        Select::make('division')
                             ->label('Divisi')
-                            ->options(Division::all()->pluck('name', 'id'))
-                            ->preload()
+                            ->options([
+                                Division::GeneralAffairs->value => 'General Affairs',
+                                Division::OperationalChef->value => 'Operational Chef',
+                                Division::MasterChef->value => 'Master Chef',
+                                Division::AdminSales->value => 'Admin Sales',
+                                Division::MarketingSales->value => 'Marketing Sales',
+                                Division::CustomerCare->value => 'Customer Care',
+                                Division::HumanResourcesDevelopment->value => 'Human Resources & Development',
+                                Division::GraphicDesign->value => 'Graphic Design',
+                            ])
                             ->searchable(),
                     ]);
         } else {

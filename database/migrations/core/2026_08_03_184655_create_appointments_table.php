@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone');
+            $table->decimal('payment_amount')->nullable();
             $table->boolean('is_contacted')->default(false);
             $table->boolean('is_success')->default(false);
             $table->timestamps();

@@ -57,7 +57,7 @@
                     </div>
                     <div class="flex flex-col items-start md:items-end gap-1 order-2 md:order-1">
                         <span class="text-md text-gray-500 font-semibold">Selamat Datang</span>
-                        <span class="text-2xl text-white font-bold">{{ $this->user }}</span>
+                        <span class="text-2xl text-gray-900 dark:text-white font-bold">{{ $this->user }}</span>
                     </div>
                 </div>
             </div>

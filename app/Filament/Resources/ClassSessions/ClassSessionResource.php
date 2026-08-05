@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class ClassSessionResource extends Resource
@@ -28,6 +29,11 @@ class ClassSessionResource extends Resource
     protected static ?string $pluralModelLabel = 'Laporan Kelas';
 
     protected static ?string $recordTitleAttribute = 'user_id.name';
+
+    public static function canViewAny(): bool
+    {
+        return Auth::user()->canAccessKpiFeatures() ?? false;
+    }
 
     public static function form(Schema $schema): Schema
     {
