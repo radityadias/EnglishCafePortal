@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\WorkType;
+use App\Enums\Division;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -25,34 +26,32 @@ class EmployeeProfile extends Model
         'ktp_path',
         'other_path',
         'user_id',
-        'division_id',
+        'division',
         'branch_id',
     ];
 
-    public function casts()
+    public function casts(): array
     {
         return [
             'work_time' => WorkType::class,
+            'division' => Division::class,
         ];
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function division() : BelongsTo
-    {
-        return $this->belongsTo(Division::class);
-    }
-
-    public function branch() : BelongsTo
+    public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
 
-    public function workingTime() : BelongsTo
+    public function isKpiTracked(): bool
     {
-        return $this->belongsTo(WorkingTime::class);
+        return $this->division !== null
+            && in_array($this->division, Division::kpiTracked(), true);
     }
 }
+

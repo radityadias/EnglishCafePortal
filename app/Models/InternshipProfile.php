@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\WorkType;
+use App\Enums\Division;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -25,7 +26,7 @@ InternshipProfile extends Model
         'start_date',
         'end_date',
         'school',
-        'division_id',
+        'division',
         'branch_id',
         'instance_id'
     ];
@@ -34,17 +35,13 @@ InternshipProfile extends Model
     {
         return [
             'work_time' => WorkType::class,
+            'division' => Division::class,
         ];
     }
 
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function division() : BelongsTo
-    {
-        return $this->belongsTo(Division::class);
     }
 
     public function branch() : BelongsTo
@@ -55,6 +52,12 @@ InternshipProfile extends Model
     public function instance() : BelongsTo
     {
         return $this->belongsTo(Instance::class);
+    }
+
+    public function isKpiTracked() : bool
+    {
+        return $this->division !== null
+            && in_array($this->division, Division::kpiTracked(), true);
     }
 
 

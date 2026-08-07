@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\ClassSessions;
+namespace App\Filament\Resources\Appointments;
 
-use App\Filament\Resources\ClassSessions\Pages\ManageClassSessions;
-use App\Models\ClassSession;
+use App\Filament\Resources\Appointments\Pages\ManageAppointments;
+use App\Models\Appointment;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -14,32 +14,33 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
-class ClassSessionResource extends Resource
+class AppointmentsResource extends Resource
 {
-    protected static ?string $model = ClassSession::class;
+    protected static ?string $model = Appointment::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Phone;
 
-    protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
+    protected static string | UnitEnum | null $navigationGroup = 'Rekrutmen';
 
-    protected static ?string $pluralModelLabel = 'Laporan Kelas';
+    protected static ?string $pluralModelLabel = 'Appointments';
 
-    protected static ?string $recordTitleAttribute = 'user_id.name';
+    protected static ?string $recordTitleAttribute = 'user.name';
 
     public static function canViewAny(): bool
     {
-        return Auth::user()->canAccessKpiFeatures() ?? false;
+        return Auth::user()?->canAccessKpiFeatures() ?? false;
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextInput::make('user_id.name')
+                TextInput::make('user.name')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -48,21 +49,18 @@ class ClassSessionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('user_id.name')
+            ->recordTitleAttribute('name')
             ->columns([
-                TextColumn::make('user.name')
+                TextColumn::make('name')
                     ->label('Nama')
                     ->searchable(),
-                TextColumn::make('type')
-                    ->label('Type'),
-                TextColumn::make('date')
-                    ->label('Tanggal'),
-                TextColumn::make('start_time')
-                    ->label('Waktu Mulai'),
-                TextColumn::make('end_time')
-                    ->label('Waktu Selesai'),
-                TextColumn::make('notes')
-                    ->label('Catatan'),
+                TextColumn::make('phone')
+                    ->label('No. Telepon')
+                    ->searchable(),
+                ToggleColumn::make('is_contacted')
+                    ->label('Dihubungi'),
+                ToggleColumn::make('is_success')
+                    ->label('Sukses'),
             ])
             ->filters([
                 //
@@ -81,7 +79,7 @@ class ClassSessionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ManageClassSessions::route('/'),
+            'index' => ManageAppointments::route('/'),
         ];
     }
 }

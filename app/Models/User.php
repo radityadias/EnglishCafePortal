@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Division;
 use App\Enums\Position;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
@@ -72,6 +73,23 @@ class User extends Authenticatable implements FilamentUser
     public function attendanceRecap() : BelongsTo
     {
         return $this->belongsTo(AttendanceRecap::class);
+    }
+
+    public function classSession() : HasOne
+    {
+        return $this->hasOne(ClassSession::class);
+    }
+
+    public function appointment() : HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function canAccessKpiFeatures(): bool
+    {
+        $isKpiTracked = ($this->employeeProfile?->isKpiTracked() || $this->internshipProfile?->isKpiTracked());
+
+        return ($isKpiTracked || $this->hasAnyRole(['super_admin', 'admin']) ?? false);
     }
 
     public function hasSetPassword() : bool

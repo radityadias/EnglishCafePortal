@@ -1,4 +1,4 @@
-<?php
+t<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('ktp_path')->nullable();
             $table->string('other_path')->nullable();
             $table->string('work_type')->nullable();
+            $table->string('division')->nullable();
             $table->time('work_time_start')->nullable();
             $table->time('work_time_end')->nullable();
             $table->timestamps();
