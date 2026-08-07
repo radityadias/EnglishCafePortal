@@ -13,10 +13,8 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use app\Enums\AttendanceStatus;
 use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -34,25 +32,30 @@ class AttendanceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::QueueList;
 
-    protected static string | UnitEnum | null $navigationGroup = 'Kehadiran';
+    protected static string|UnitEnum|null $navigationGroup = 'Kehadiran';
 
     protected static ?string $pluralModelLabel = 'Presensi';
 
     protected static ?string $recordTitleAttribute = 'user.name';
 
-    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
         return $record->user->name;
     }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('status')
                     ->default('absent'),
+
                 DatePicker::make('checkin_date'),
+
                 TimePicker::make('checkin_time'),
+
                 TimePicker::make('checkout_time'),
+
                 Select::make('user_id')
                     ->relationship('user', 'name')
                     ->required(),
@@ -63,11 +66,15 @@ class AttendanceResource extends Resource
     {
         return $table
             ->recordTitleAttribute('user.name')
-            ->modifyQueryUsing(fn (Builder $query): Builder => $query->orderBy('updated_at', 'desc'))
+            ->modifyQueryUsing(
+                fn (Builder $query): Builder =>
+                    $query->orderBy('updated_at', 'desc')
+            )
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')
                     ->searchable(),
+
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (AttendanceStatus $state) => match ($state) {
@@ -76,25 +83,23 @@ class AttendanceResource extends Resource
                         AttendanceStatus::Absent => 'danger',
                         AttendanceStatus::Leave => 'info',
                     }),
+
                 TextColumn::make('checkin_date')
                     ->label('Tanggal Masuk')
                     ->date()
                     ->sortable(),
+
                 TextColumn::make('checkin_time')
                     ->label('Jam Masuk')
                     ->time()
                     ->sortable(),
+
                 TextColumn::make('checkout_time')
                     ->label('Jam Keluar')
                     ->time()
                     ->sortable(),
             ])
             ->filters([
-<<<<<<< HEAD
-                Selectfilter::Status('status')
-                    ->Status('Status')
-                    ->options(AttendanceStatus::class)
-=======
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options([
@@ -104,20 +109,20 @@ class AttendanceResource extends Resource
                     ])
                     ->preload()
                     ->searchable(),
+
                 Filter::make('date')
                     ->label('Tanggal')
                     ->schema([
                         DatePicker::make('checkin_date')
-                            ->label('Tanggal Masuk')
+                            ->label('Tanggal Masuk'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['checkin_date'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('checkin_date', $date)
-                            );
-                    })
->>>>>>> 352d68a0c0016c43243ce7583be1491992f07828
+                        return $query->when(
+                            $data['checkin_date'],
+                            fn (Builder $query, $date): Builder =>
+                                $query->whereDate('checkin_date', $date)
+                        );
+                    }),
             ])
             ->recordActions([
                 EditAction::make(),
