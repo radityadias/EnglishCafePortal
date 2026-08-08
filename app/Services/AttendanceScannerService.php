@@ -176,7 +176,7 @@ class AttendanceScannerService
         return in_array($division, Division::kpiTracked(), true);
     }
 
-    private function getUserDivision(?User $user): ?string
+    private function getUserDivision(?User $user): ?Division
     {
         return $user->employeeProfile?->division ?? $user->internshipProfile?->division ?? null;
     }
