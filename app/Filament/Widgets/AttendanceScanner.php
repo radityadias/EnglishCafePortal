@@ -21,7 +21,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
     use InteractsWithActions, InteractsWithForms;
 
     protected string $view = 'filament.widgets.attendance-scanner';
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 1;
     protected int|string|array $columnSpan = 'full';
 
     protected AttendanceScannerService $attendanceService;
