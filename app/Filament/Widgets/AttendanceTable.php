@@ -32,8 +32,6 @@ class AttendanceTable extends TableWidget
                 ->orderBy('updated_at', 'desc'))
             ->heading('Presensi')
             ->columns([
-                TextColumn::make('user.name')
-                    ->label('Nama'),
                 TextColumn::make('checkin_date')
                     ->label('Tanggal')
                     ->date('d F Y'),
@@ -42,14 +40,15 @@ class AttendanceTable extends TableWidget
                 TextColumn::make('time')
                     ->label('Waktu')
                     ->formatStateUsing(function ($record): string {
-                        return $record->checkout_time ? $record->checkout_time : $record->checkin_time;
+                        return $record->checkout_time ?? $record->checkin_time;
                     }),
                 TextColumn::make('status')
                     ->badge()
+                    ->formatStateUsing(fn (?AttendanceStatus $state): string => $state->getLabel() ?? '-')
                     ->color(fn (AttendanceStatus $state) => match ($state) {
                         AttendanceStatus::Attend => 'success',
                         AttendanceStatus::Late => 'warning',
-                        AttendanceStatus::Absent => 'danger',
+                        AttendanceStatus::Absent, AttendanceStatus::Incomplete => 'danger',
                         AttendanceStatus::Leave => 'info',
                     }),
             ])

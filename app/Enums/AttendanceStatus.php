@@ -11,4 +11,17 @@ enum AttendanceStatus: string
     case Leave = 'leave';
     case CheckIn = 'checkin';
     case CheckOut = 'checkout';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::Attend => "On Time",
+            self::Late => "Terlambat",
+            self::Absent => "Tidak Hadir",
+            self::Incomplete => "Tidak Sah",
+            self::Leave => "Izin",
+            self::CheckIn => "Masuk",
+            self::CheckOut => "Keluar",
+        };
+    }
 }

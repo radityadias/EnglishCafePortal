@@ -181,6 +181,15 @@ class AttendanceScannerService
         return $user->employeeProfile?->division ?? $user->internshipProfile?->division ?? null;
     }
 
+    public function canAskLeave(?int $limit): bool
+    {
+        $current_leave = Attendance::where('user_id', auth()->id())
+            ->where('status', AttendanceStatus::Leave)
+            ->count();
+
+        return $current_leave < $limit;
+    }
+
 
     private function isLate(Carbon $checkin_time, Carbon $work_time): bool
     {
