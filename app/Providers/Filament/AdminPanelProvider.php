@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Kpi;
 use App\Filament\Pages\Profile;
 use Filament\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -44,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Profile::class,
                 Dashboard::class,
+                Kpi::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
