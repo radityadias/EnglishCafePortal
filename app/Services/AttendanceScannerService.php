@@ -129,7 +129,7 @@ class AttendanceScannerService
         return AttendanceStatus::Attend;
     }
 
-    private function calculateMinutesLate(Carbon $checkin_time, ?Carbon $work_time_start): int
+    public function calculateMinutesLate(Carbon $checkin_time, ?Carbon $work_time_start): int
     {
         if (is_null($work_time_start)) {
             return 0;
@@ -163,7 +163,7 @@ class AttendanceScannerService
         return $workType ? WorkType::tryFrom($workType) : null;
     }
 
-    private function getWorkTimeStart(User $user): ?Carbon
+    public function getWorkTimeStart(User $user): ?Carbon
     {
         $work_time_start = $user->employeeProfile?->work_time_start ?? $user->internshipProfile?->work_time_start;
 

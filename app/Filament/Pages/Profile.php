@@ -154,12 +154,10 @@ class Profile extends Page
                             ->default('-'),
                         TextEntry::make('employeeProfile.work_type')
                             ->label('Jenis Jam Kerja')
-                            ->formatStateUsing(fn (?WorkType $state) => $state->getLabel())
-                            ->default('-'),
+                            ->formatStateUsing(fn (?WorkType $state) => $state->getLabel() ?? '-'),
                         TextEntry::make('employeeProfile.division')
                             ->label('Divisi')
-                            ->formatStateUsing(fn (?Division $state) => $state->getLabel())
-                            ->default('-'),
+                            ->formatStateUsing(fn (?Division $state) => $state->getLabel() ?? '-'),
                         TextEntry::make('work_time_start')
                             ->label('Waktu Kerja')
                             ->formatStateUsing(fn ($state) => $this->user->employeeProfile->work_time_start . ' - ' . $this->user->employeeProfile->work_time_end)
@@ -188,8 +186,7 @@ class Profile extends Page
                             ->placeholder('-'),
                         TextEntry::make('internshipProfile.work_type')
                             ->label('Jenis Jam Kerja')
-                            ->formatStateUsing(fn (?WorkType $state) => $state->getLabel())
-                            ->default('-'),
+                            ->formatStateUsing(fn (?WorkType $state) => $state->getLabel() ?? '-'),
                         TextEntry::make('internshipProfile.work_time_start')
                             ->label('Waktu Mulai Kerja')
                             ->default('-')
@@ -206,8 +203,7 @@ class Profile extends Page
                             ->default('-'),
                         TextEntry::make('internshipProfile.division')
                             ->label('Divisi')
-                            ->formatStateUsing(fn (?Division $state) => $state->getLabel())
-                            ->default('-'),
+                            ->formatStateUsing(fn (?Division $state) => $state->getLabel() ?? '-'),
                         TextEntry::make('internshipProfile.instance.name')
                             ->label('Instansi')
                             ->default('-'),
