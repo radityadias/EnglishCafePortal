@@ -13,6 +13,14 @@ class AttendanceSummaryStats extends StatsOverviewWidget
 {
     protected static ?int $sort = 2;
 
+    public function getColumns(): int|array|null
+    {
+        return [
+            'default' => 2,
+            'md' => 4,
+        ];
+    }
+
     protected function getStats(): array
     {
         $summary = $this->getMonthlySummary();

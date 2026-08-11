@@ -5,15 +5,13 @@ namespace App\Filament\Widgets;
 use App\Filament\Actions\Attendance\AttendanceRequestAction;
 use App\Filament\Actions\Attendance\ClassSessionReportAction;
 use App\Filament\Actions\Attendance\LeaveRequestAction;
-use App\Models\Branch;
-use App\Models\User;
-use App\Services\AttendanceScannerService;
-use Filament\Widgets\Widget;
+use App\Services\Attendances\AttendanceScannerService;
 use Filament\Actions\Action;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
 
 class AttendanceScanner extends Widget implements HasForms, HasActions

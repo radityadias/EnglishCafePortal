@@ -2,24 +2,22 @@
 
 namespace App\Observers;
 
-use App\Enums\WorkType;
 use App\Models\Attendance;
-use App\Models\AttendanceRecap;
-use App\Models\User;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
-use Illuminate\Support\Facades\Auth;
-use function Termwind\parse;
+use App\Services\Attendances\AttendanceUpdateService;
 
 class AttendanceObserver
 {
-    /**
-     * Handle the Attendance "created" event.
-     */
+    public AttendanceUpdateService $attendanceService;
+
+    public function __construct(AttendanceUpdateService $attendanceUpdateService)
+    {
+        $this->attendanceService = $attendanceUpdateService;
+    }
+
     public function created(Attendance $attendance): void
     {
-        if (!$this->isUserHaveRecap($attendance)) {
-            $this->storeAttendanceRecap($attendance);
+        if (! $this->attendanceService->isUserHaveRecap($attendance->user_id)) {
+            $this->attendanceService->storeAttendanceRecap($attendance->user_id);
         }
     }
 
@@ -32,12 +30,12 @@ class AttendanceObserver
             return;
         }
 
-        if ($this->isCheckoutTimeEmpty($attendance)) {
+        if ($this->attendanceService->isCheckoutTimeEmpty($attendance->checkout_time)) {
             return;
         }
 
-        $this->updateAttendance($attendance);
-        $this->updateAttendanceRecap($attendance);
+        $this->attendanceService->updateAttendance($attendance);
+        $this->attendanceService->updateAttendanceRecap($attendance->user_id);
     }
 
     /**
@@ -45,7 +43,7 @@ class AttendanceObserver
      */
     public function deleted(Attendance $attendance): void
     {
-        //
+        $this->attendanceService->updateAttendanceRecap($attendance->user_id);
     }
 
     /**
@@ -53,7 +51,7 @@ class AttendanceObserver
      */
     public function restored(Attendance $attendance): void
     {
-        //
+        $this->attendanceService->updateAttendanceRecap($attendance->user_id);
     }
 
     /**
@@ -62,48 +60,5 @@ class AttendanceObserver
     public function forceDeleted(Attendance $attendance): void
     {
         //
-    }
-
-    public function isUserHaveRecap(Attendance $attendance): bool
-    {
-       return AttendanceRecap::where('user_id', $attendance->user_id)->exists();
-    }
-
-    public function isCheckoutTimeEmpty(Attendance $attendance): bool
-    {
-       return is_null($attendance->checkout_time);
-    }
-
-    public function storeAttendanceRecap(Attendance $attendance): void
-    {
-       AttendanceRecap::firstOrCreate(
-           [
-               'user_id' => $attendance->user_id
-           ],
-           [
-               'total_hours' => 0
-           ]
-       );
-    }
-
-    public function updateAttendanceRecap(Attendance $attendance): void
-    {
-        $recap = AttendanceRecap::where('user_id', $attendance->user_id)->first();
-
-        $recap->update([
-            'total_hours' => $this->calculateTotalHours($attendance),
-        ]);
-    }
-
-    public function updateAttendance(Attendance $attendance): void
-    {
-        $attendance->updateQuietly([
-            'working_time' => $this->calculateTimeDifference($attendance)
-        ]);
-    }
-
-    public function calculateTotalHours(Attendance $attendance): float
-    {
-        return Attendance::where('user_id', $attendance->user_id)->sum('working_time');
     }
 }

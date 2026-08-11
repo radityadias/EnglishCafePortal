@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Attendances;
 
 use App\Enums\AttendanceStatus;
 use App\Enums\Division;
@@ -9,10 +9,13 @@ use App\Enums\WarningLevel;
 use App\Enums\WorkType;
 use App\Models\Attendance;
 use App\Models\User;
+use App\Services\GeofenceService;
+use App\Services\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class AttendanceScannerService
+class
+AttendanceScannerService
 {
     private NotificationService $notificationService;
     private const float ALLOWED_RADIUS = 150.0;

@@ -27,6 +27,7 @@ class GeofenceService
     public function calculateDistance(float $lat1, float $lon1, float $lat2, float $lon2) : float
     {
         $earthRadius = self::EARTH_RADIUS_METER;
+
         $latDelta = $this->calculateDelta($lat1, $lat2);
         $lonDelta = $this->calculateDelta($lon1, $lon2);
         $a = $this->calculateChordLength($lat1, $lon1, $lat2, $lon2, $latDelta, $lonDelta);
