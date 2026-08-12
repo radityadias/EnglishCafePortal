@@ -21,4 +21,7 @@ return [
 
     'work_time_title' => 'Work Time is not Configured',
     'work_time_description' => 'Please configure your work time on profile page.',
+
+    'late_title' => 'Attendance Late',
+    'late_description' => 'Your attendance has been late for :late_minutes minutes.',
     ];

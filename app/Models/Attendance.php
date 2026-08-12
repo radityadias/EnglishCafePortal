@@ -18,6 +18,8 @@ class Attendance extends Model
         'checkin_time',
         'checkout_time',
         'working_time',
+        'late_minutes',
+        'warning_level',
     ];
 
     protected function casts(): array

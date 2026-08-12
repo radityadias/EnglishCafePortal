@@ -18,6 +18,8 @@ return new class extends Migration
             $table->time('checkin_time')->nullable();
             $table->time('checkout_time')->nullable();
             $table->float('working_time')->nullable();
+            $table->float('late_minutes')->nullable();
+            $table->string('warning_level')->nullable();
             $table->timestamps();
         });
     }

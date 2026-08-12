@@ -34,7 +34,7 @@ InternshipProfile extends Model
     public function casts()
     {
         return [
-            'work_time' => WorkType::class,
+            'work_type' => WorkType::class,
             'division' => Division::class,
         ];
     }

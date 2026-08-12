@@ -57,7 +57,6 @@ class LeaveRequestAction extends Action
                 FileUpload::make('image')
                     ->label('Bukti Foto')
                     ->image()
-                    ->required()
                     ->directory('absen')
                     ->disk('s3')
                     ->preventFilePathTampering(

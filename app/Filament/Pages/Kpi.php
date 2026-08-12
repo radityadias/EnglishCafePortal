@@ -2,12 +2,13 @@
 
 namespace App\Filament\Pages;
 
+use App\Livewire\ClosingRateChart;
 use App\Livewire\PerformanceIndex;
+use App\Livewire\ProfitChart;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Page;
-use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 use UnitEnum;
@@ -55,6 +56,14 @@ class Kpi extends Page
     {
         return [
             PerformanceIndex::class,
+        ];
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        return [
+            ClosingRateChart::class,
+            ProfitChart::class,
         ];
     }
 

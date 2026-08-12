@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Enums\AttendanceStatus;
+use App\Enums\Division;
 use App\Enums\Position;
+use App\Enums\WarningLevel;
 use App\Enums\WorkType;
 use App\Models\Attendance;
 use App\Models\User;
@@ -13,11 +15,47 @@ use Illuminate\Support\Facades\Auth;
 class AttendanceScannerService
 {
     private NotificationService $notificationService;
-    private const float ALLOWED_RADIUS = 100.0;
+    private const float ALLOWED_RADIUS = 150.0;
 
     public function __construct(NotificationService $service)
     {
         $this->notificationService = $service;
+    }
+
+    private function storeAttendance($user): Attendance
+    {
+        $checkin_time = Carbon::now();
+        $late_minutes = $this->calculateMinutesLate($checkin_time, $this->getWorkTimeStart($user));
+
+        return Attendance::firstOrCreate(
+            [
+                'user_id' => $user->id,
+                'checkin_date' => today(),
+            ],
+            [
+                'checkin_time' => $checkin_time,
+                'status' => $this->checkAttendanceStatus($user, $late_minutes),
+                'late_minutes' => $late_minutes,
+                'warning_level' => $this->getWarningLevel($late_minutes),
+            ]
+        );
+    }
+
+    private function updateAttendance($user): bool
+    {
+        $attendance = Attendance::where('user_id', $user->id)
+            ->whereDate('checkin_date', today())
+            ->whereNull('checkout_time')
+            ->first();
+
+
+        if (!$attendance) {
+            return false;
+        }
+
+        $attendance->update(['checkout_time' => Carbon::now()]);
+
+        return true;
     }
 
     public function handleAttendance($latitude, $longitude): void
@@ -29,14 +67,12 @@ class AttendanceScannerService
             return;
         }
 
-        if (!$this->isBranchConfigured($user))
-        {
+        if (!$this->isBranchConfigured($user)) {
             $this->notificationService->errorNotification(__('notification.branch_title'), __('notification.branch_description'));
             return;
         }
 
-        if (!$this->isWorkTimeConfigured($user))
-        {
+        if (!$this->isWorkTimeConfigured($user)) {
             $this->notificationService->errorNotification(__('notification.work_time_title'), __('notification.work_time_description'));
             return;
         }
@@ -82,56 +118,37 @@ class AttendanceScannerService
         }
     }
 
-    private function storeAttendance($user): Attendance
+    private function checkAttendanceStatus(User $user, ?int $late_minutes): AttendanceStatus
     {
-        $checkin_time = Carbon::now();
+        if ($this->isEmployee($user) && $this->getWorkType($user) === WorkType::Fixed && $late_minutes > 0) {
+            $this->notificationService->warningNotification(__('notification.late_title'), __('notification.late_descriptione', ['late_minutes' => $late_minutes]));
 
-        return Attendance::firstOrCreate(
-            [
-                'user_id' => $user->id,
-                'checkin_date' => today(),
-            ],
-            [
-                'checkin_time' => $checkin_time,
-                'status' => $this->checkAttendanceStatus($user, $checkin_time),
-            ]
-        );
-    }
-
-    private function updateAttendance($user): bool
-    {
-        $attendance = Attendance::where('user_id', $user->id)
-            ->whereDate('checkin_date', today())
-            ->whereNull('checkout_time')
-            ->first();
-
-
-        if (!$attendance) {
-            return false;
-        }
-
-        $attendance->update(['checkout_time' => Carbon::now()]);
-
-        return true;
-    }
-
-    private function checkAttendanceStatus(User $user, Carbon $checkin_time): AttendanceStatus
-    {
-        if ($this->isEmployee($user)) {
-            if ($this->getWorkType($user) === WorkType::Fixed) {
-                $workTimeStart = $user->employeeProfile?->work_time_start;
-
-                if (!$workTimeStart) {
-                    return AttendanceStatus::Attend;
-                }
-
-                return $checkin_time->gt(Carbon::parse($workTimeStart))
-                    ? AttendanceStatus::Late
-                    : AttendanceStatus::Attend;
-            }
+            return AttendanceStatus::Late;
         }
 
         return AttendanceStatus::Attend;
+    }
+
+    public function calculateMinutesLate(Carbon $checkin_time, ?Carbon $work_time_start): int
+    {
+        if (is_null($work_time_start)) {
+            return 0;
+        }
+
+        return $this->isLate($checkin_time, $work_time_start)
+            ? $checkin_time->diffInMinutes($work_time_start)
+            : 0;
+    }
+
+    private function getWarningLevel(?int $late_minutes): string
+    {
+        return match (true) {
+            $late_minutes === null || $late_minutes <= 0 => WarningLevel::None->value,
+            $late_minutes <= 30 => WarningLevel::Low->value,
+            $late_minutes <= 60 => WarningLevel::Medium->value,
+            $late_minutes <= 90 => WarningLevel::High->value,
+            default => WarningLevel::High->value,
+        };
     }
 
     private function getWorkType(User $user): ?WorkType
@@ -146,17 +163,42 @@ class AttendanceScannerService
         return $workType ? WorkType::tryFrom($workType) : null;
     }
 
+    public function getWorkTimeStart(User $user): ?Carbon
+    {
+        $work_time_start = $user->employeeProfile?->work_time_start ?? $user->internshipProfile?->work_time_start;
+
+        return $work_time_start ? Carbon::parse($work_time_start) : null;
+    }
+
+    public function isDivisionChef(?User $user): bool
+    {
+        $division = $this->getUserDivision($user);
+        return in_array($division, Division::kpiTracked(), true);
+    }
+
+    private function getUserDivision(?User $user): ?Division
+    {
+        return $user->employeeProfile?->division ?? $user->internshipProfile?->division ?? null;
+    }
+
+    public function canAskLeave(?int $limit): bool
+    {
+        $current_leave = Attendance::where('user_id', auth()->id())
+            ->where('status', AttendanceStatus::Leave)
+            ->count();
+
+        return $current_leave < $limit;
+    }
+
+
+    private function isLate(Carbon $checkin_time, Carbon $work_time): bool
+    {
+        return $checkin_time->gt($work_time);
+    }
+
     private function isEmployee($user): bool
     {
         return $user->position === Position::Employee;
-    }
-
-    public function isDivisionChef($user): bool
-    {
-        return in_array($user->division?->name, [
-            'Master Chef',
-            'Chef Operational'
-        ], true);
     }
 
     public function isAlreadyCheckedIn(): bool

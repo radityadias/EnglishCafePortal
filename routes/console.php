@@ -9,4 +9,4 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::job(new UpdateAttendanceAbsent)->dailyAt('23:30');
+Schedule::job(new UpdateAttendanceAbsent)->dailyAt('23:50')->timezone('Asia/Jakarta');

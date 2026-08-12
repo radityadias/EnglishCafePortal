@@ -66,10 +66,7 @@ class AttendanceResource extends Resource
     {
         return $table
             ->recordTitleAttribute('user.name')
-            ->modifyQueryUsing(
-                fn (Builder $query): Builder =>
-                    $query->orderBy('updated_at', 'desc')
-            )
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->where('user_id', auth()->id())->orderBy('updated_at', 'desc'))
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')

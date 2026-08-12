@@ -21,7 +21,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
     use InteractsWithActions, InteractsWithForms;
 
     protected string $view = 'filament.widgets.attendance-scanner';
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 1;
     protected int|string|array $columnSpan = 'full';
 
     protected AttendanceScannerService $attendanceService;
@@ -29,6 +29,7 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
     public bool $alreadyCheckedIn = false;
     public bool $alreadyCheckedOut = false;
     public bool $isDivisionChef = false;
+    public const int MAX_LEAVE = 3;
 
     public string $user;
     public string $branch;
@@ -49,7 +50,8 @@ class AttendanceScanner extends Widget implements HasForms, HasActions
 
     public function leaveRequestAction(): Action
     {
-        return LeaveRequestAction::make();
+        return LeaveRequestAction::make()
+            ->disabled(! $this->attendanceService->canAskLeave(self::MAX_LEAVE));
     }
 
     public function attendanceRequestAction(): Action

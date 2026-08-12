@@ -96,7 +96,7 @@
 
                 {{-- Action buttons --}}
                 <div class="w-full md:w-auto flex flex-row justify-between md:justify-center items-center gap-3">
-                    {{  $this->classSessionReportAction()  }}
+                    {{ $isDivisionChef && $this->classSessionReportAction() }}
                     {{ $this->leaveRequestAction }}
                     {{ $this->attendanceRequestAction }}
                 </div>

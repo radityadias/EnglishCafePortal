@@ -26,6 +26,11 @@ class UpdateAttendanceAbsent implements ShouldQueue
      */
     public function handle(): void
     {
+        if ($this->isSunday())
+        {
+            return;
+        }
+
         $absent = $this->getAbsentUser();
         $leave = $this->getLeaveUser();
         $invalid = $this->getInvalidUser();
@@ -104,8 +109,13 @@ class UpdateAttendanceAbsent implements ShouldQueue
                 'checkin_date' => today(),
             ],
             [
-                'status' => AttendanceStatus::Absent,
+                'status' => AttendanceStatus::Incomplete,
             ]);
         }
+    }
+
+    private function isSunday(): bool
+    {
+        return now()->isSunday();
     }
 }

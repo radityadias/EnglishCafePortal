@@ -2,12 +2,14 @@
 
 namespace App\Observers;
 
+use App\Enums\WorkType;
 use App\Models\Attendance;
 use App\Models\AttendanceRecap;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Auth;
+use function Termwind\parse;
 
 class AttendanceObserver
 {
@@ -72,11 +74,6 @@ class AttendanceObserver
        return is_null($attendance->checkout_time);
     }
 
-    public function isUserLeave(): bool
-    {
-        //
-    }
-
     public function storeAttendanceRecap(Attendance $attendance): void
     {
        AttendanceRecap::firstOrCreate(
@@ -103,11 +100,6 @@ class AttendanceObserver
         $attendance->updateQuietly([
             'working_time' => $this->calculateTimeDifference($attendance)
         ]);
-    }
-
-    public function calculateTimeDifference(Attendance $attendance): float
-    {
-        return Carbon::parse($attendance->checkin_time)->diffInMinutes($attendance->checkout_time);
     }
 
     public function calculateTotalHours(Attendance $attendance): float
