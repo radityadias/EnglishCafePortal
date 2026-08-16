@@ -1,58 +1,90 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# English Cafe Portal
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A web-based employee management and attendance system built for English Cafe. It handles location-based attendance tracking, employee performance monitoring, and daily activity reporting for both employees and interns.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* **Geofenced Attendance** — Employees check in/out via GPS, validated against their assigned branch's location radius. Includes automatic lateness detection with tiered warning levels (low/medium/high) based on how late a check-in is relative to scheduled work hours.
+* **Attendance Requests** — Manual correction workflow for when a scan isn't possible (e.g. device issues, forgotten check-in). Requests go through an approval flow before affecting attendance records.
+* **Employee Performance Index (KPI)** — Monthly, filterable dashboard tracking attendance percentage, class counts (theory / daily talk), appointment closing rate, and revenue — scoped to KPI-tracked divisions (Master Chef, Operational Chef).
+* **Daily Progress Reports** — Class session logging for tracking teaching activity.
+* **Employee \& Internship Profiles** — Separate profile types for full-time employees and interns, covering personal info, work schedule, bank details, and required documents (CV, KTP), stored via S3-compatible storage.
+* **Role-Based Access Control** — Powered by Filament Shield, with Super Admin, Admin, and User roles controlling access across resources and pages.
+* **Data Export** — Filterable attendance and report exports (by month/year), processed asynchronously via Laravel's queue system.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* [**Laravel**](https://laravel.com) — PHP application framework
+* [**Filament**](https://filamentphp.com) — Admin panel and resource management
+* [**Filament Shield**](https://github.com/bezhanSalleh/filament-shield) — Role and permission management
+* [**Livewire**](https://livewire.laravel.com) — Reactive UI components
+* **PostgreSQL** (via [Supabase](https://supabase.com)) — Primary database
+* **Laravel Queues** — Background job processing (exports, KPI updates, notifications)
 
-## Learning Laravel
+## Getting Started
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Requirements
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* PHP 8.3+
+* Composer
+* Node.js \& npm
+* PostgreSQL database
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Installation
 
 ```bash
-composer require laravel/boost --dev
+# Clone the repository
+git clone <repository-url>
+cd english-cafe-portal
 
-php artisan boost:install
+# Install PHP dependencies
+composer install
+
+# Install JS dependencies
+npm install
+
+# Copy and configure environment
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Update `.env` with your database and storage (S3) credentials, then:
 
-## Contributing
+```bash
+# Run migrations
+php artisan migrate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Publish Filament's job batching migrations (required for exports)
+php artisan vendor:publish --tag=filament-actions-migrations
+php artisan migrate
 
-## Code of Conduct
+# Generate Filament Shield permissions
+php artisan shield:generate --all
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Build frontend assets
+npm run build
 
-## Security Vulnerabilities
+# Serve the application
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Running the Queue Worker
+
+Exports, KPI updates, and other background jobs require an active queue worker:
+
+```bash
+php artisan queue:work
+```
+
+### Running the Scheduler
+
+Scheduled tasks are defined in `routes/console.php`. In production, add this to your crontab:
+
+```bash
+\\\* \\\* \\\* \\\* \\\* cd /path-to-project \\\&\\\& php artisan schedule:run >> /dev/null 2>\\\&1
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proprietary — internal use for English Cafe.
+

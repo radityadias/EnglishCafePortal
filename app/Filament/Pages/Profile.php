@@ -39,7 +39,8 @@ class Profile extends Page
 
     public function mount(): void
     {
-        $this->user = Auth::user()->fresh()->load(
+        $this->user = Auth::user()->fresh()->load(array_merge(
+            ['attendanceRecap'],
             $this->isEmployee() ? [
                 'employeeProfile',
                 'employeeProfile.branch',
@@ -48,7 +49,7 @@ class Profile extends Page
                 'internshipProfile.branch',
                 'internshipProfile.instance',
             ]
-        );
+        ));
     }
 
     #[On('profile_updated')]
